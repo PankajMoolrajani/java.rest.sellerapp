@@ -34,7 +34,7 @@ public class User
 		PreparedStatement psUserTable = null;
 		ResultSet rsUserTable = null;
 		List<UserTableBean> userList = new ArrayList<UserTableBean>();
-		Map<String,List<UserTableBean>> userMap = new HashMap<String,List<UserTableBean>>();
+		Map<String,List<UserTableBean>> userMap = new HashMap<String,List<UserTableBean>>();		
 		try
 		{
 			String tableUser = "user";
