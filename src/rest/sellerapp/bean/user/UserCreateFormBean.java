@@ -3,6 +3,14 @@ package rest.sellerapp.bean.user;
 public class UserCreateFormBean
 {
 	private String firstName,lastName,userCategory,phoneNumber,emailId,addLineOne,addLineTwo,city,state,zip;
+	private int userCatId ;
+	public int getUserCatId() {
+		return userCatId;
+	}
+
+	public void setUserCatId(int userCatId) {
+		this.userCatId = userCatId;
+	}
 
 	public UserCreateFormBean() {
 		super();

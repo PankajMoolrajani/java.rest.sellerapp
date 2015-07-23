@@ -24,14 +24,14 @@ import rest.sellerapp.bean.user.UserCreateFormBean;
 import rest.sellerapp.controller.db.DbConnection;
 import rest.sellerapp.controller.db.DbUtils;
 
-@Path("/user/create")
+@Path("/user")
 public class UserCreateFormController 
 {
 	Set<Integer> addressIdSet=new HashSet<Integer>();
 	String TrimedPhNum ;	
 	
 	@POST
-	@Path("/x")
+	@Path("/create")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String submitUserCreateFormData(UserCreateFormBean userFormBean){			
