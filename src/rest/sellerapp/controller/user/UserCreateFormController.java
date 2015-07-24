@@ -53,6 +53,18 @@ public class UserCreateFormController
 			//System.out.println("In validate order true");
 			goForOrder(map);
 		}
+		map.remove("form_user_fname_text");
+		map.remove("form_user_lname_text");
+		map.remove("form_user_category_select");
+		map.remove("form_user_phone_text");
+		map.remove("form_user_phone_text");
+		map.remove("form_user_email_text");
+		map.remove("form_user_add1_text");
+		map.remove("form_user_add2_text");
+		map.remove("form_user_city_text");
+		map.remove("form_user_state_text");
+		map.remove("form_user_zip_text");
+		
 		return new Gson().toJson(map);		
 	}
 	public boolean validateOrder(Map<String,String> map)
@@ -228,7 +240,7 @@ public class UserCreateFormController
 				{
 					//System.out.println("ckeckPhonNum ture");
 					//System.out.println("user already Exist");
-					map.put("userStatus", "userExist");					
+					map.put("userStatus", "userAlreadyExist");					
 				}
 				else
 				{
@@ -401,11 +413,11 @@ public class UserCreateFormController
 //		PreparedStatement psUser = null;
 //		try
 //		{
-//			String columns1="id,id_user_category,name_first,name_last,emailid,phone";
-//			String table1="user";
-//			String parameters1="NULL,?,?,?,?,?";
+//			String columnsUser="id,id_user_category,name_first,name_last,emailid,phone";
+//			String tableUser="user";
+//			String parametersUser="NULL,?,?,?,?,?";
 //			
-//			psUser = con.prepareStatement("insert into "+table1+"("+columns1+") values("+parameters1+");");			
+//			psUser = con.prepareStatement("insert into "+tableUser+"("+columnsUser+") values("+parametersUser+");");			
 //			psUser.setString(1,map.get("form_user_category_select"));
 //			psUser.setString(2,map.get("form_user_fname_text"));
 //			psUser.setString(3,map.get("form_user_lname_text"));
@@ -416,61 +428,62 @@ public class UserCreateFormController
 //			System.out.println("first checkpoint is clear");
 //			
 //			PreparedStatement psUserId = con.prepareStatement("select LAST_INSERT_ID()");
-//			ResultSet rs = psUserId.executeQuery();
-//			rs.next();
-//			int lastInsertedUserId =rs.getInt(1);
+//			ResultSet rsUserId = psUserId.executeQuery();
+//			rsUserId.next();
+//			int lastInsertedUserId =rsUserId.getInt(1);
 //			System.out.println("second check point clear and user_id= "+lastInsertedUserId);
 //			
-//			String columns2="id,id_user,address_line_one,address_line_two,city,state,zip";
-//			String table2="address";
-//			String parameters2="NULL,?,?,?,?,?,?";
+//			String columnsAddress="id,id_user,address_line_one,address_line_two,city,state,zip";
+//			String tableAddress="address";
+//			String parametersAddress="NULL,?,?,?,?,?,?";
 //			
-//			PreparedStatement ps_address = con.prepareStatement("insert into address("+columns2+") values("+parameters2+");");
-//			ps_address.setInt(1, lastInsertedUserId);
-//			ps_address.setString(2, map.get("form_user_add1_text"));
-//			ps_address.setString(3, map.get("form_user_add2_text"));
-//			ps_address.setString(4, map.get("form_user_city_text"));
-//			ps_address.setString(5, map.get("form_user_state_text"));
-//			ps_address.setString(6, map.get("form_user_zip_text"));
+//			PreparedStatement psAddress = con.prepareStatement("insert into "+tableAddress+" ("+columnsAddress+") values("+parametersAddress+");");
+//			psAddress.setInt(1, lastInsertedUserId);
+//			psAddress.setString(2, map.get("form_user_add1_text"));
+//			psAddress.setString(3, map.get("form_user_add2_text"));
+//			psAddress.setString(4, map.get("form_user_city_text"));
+//			psAddress.setString(5, map.get("form_user_state_text"));
+//			psAddress.setString(6, map.get("form_user_zip_text"));
 //			
-//			ps_address.execute();
+//			psAddress.execute();
 //			
 //			System.out.println("Third checkpoint clear ");
 //			
 //			//assign foreign key to user table of primary key of last inserted address
-//			String columns3="id_address";
-//			String table3="user";
-//			String parameters3="LAST_INSERT_ID()";
-//			String condition3="where id=?";
+//			String columnsAddressId="id_address";
+//			String tableAddressId="user";
+//			String parametersAddressId="LAST_INSERT_ID()";
+//			String conditionAddressId="where id=?";
 //			
-//			PreparedStatement ps_user2 = con.prepareStatement("update "+table3+" set "+columns3+"="+parameters3+""+condition3+"");
-//			ps_user2.setInt(1, lastInsertedUserId);
-//			ps_user2.execute();
+//			PreparedStatement psUserAddress = con.prepareStatement("update "+tableAddressId+" set "+columnsAddressId+"="+parametersAddressId+""+conditionAddressId+"");
+//			psUserAddress.setInt(1, lastInsertedUserId);
+//			psUserAddress.execute();
 //			
 //			System.out.println("go from here 1");
 //			
 //			//assign last inserted user id to the table according to the drop-down user category table.				
-//			PreparedStatement ps_user_type = con.prepareStatement("select * from user_category where id=?");
+//			PreparedStatement psUserCatName = con.prepareStatement("select * from user_category where id=?");
 //			
 //			
-//			ps_user_type.setInt(1, Integer.parseInt(map.get("form_user_category_select")));
-//			ResultSet rs_userType = ps_user_type.executeQuery();
+//			psUserCatName.setInt(1, Integer.parseInt(map.get("form_user_category_select")));
+//			ResultSet rsUserCatName = psUserCatName.executeQuery();
 //			System.out.println("go from here 2");
 //			//get name of the table
-//			rs_userType.next();		
+//			rsUserCatName.next();		
 //			
-//			System.out.println(".............insert into "+rs_userType.getString("name")+"(id_user) values("+lastInsertedUserId+".........);/");
-//			String columns4 = "id_user";
-//			String table4 = rs_userType.getString("name");
-//			String parameters4 = "?";		
+//			System.out.println(".............insert into "+rsUserCatName.getString("name")+"(id_user) values("+lastInsertedUserId+".........);/");
+//			String columnsUserCat = "id_user";
+//			String tableUserCat = rsUserCatName.getString("name");
+//			String parametersUserCat= "?";		
 //			
-//			PreparedStatement ps_user_type2 = con.prepareStatement("insert into "+table4+"("+columns4+") values("+parameters4+");");		//
-//			ps_user_type2.setInt(1, lastInsertedUserId);
-//			ps_user_type2.execute();
+//			PreparedStatement psUserCat = con.prepareStatement("insert into "+tableUserCat+"("+columnsUserCat+") values("+parametersUserCat+");");		//
+//			psUserCat.setInt(1, lastInsertedUserId);
+//			psUserCat.execute();
 //			System.out.println("Forth checkpoint clear");	
 //		}
 //		catch(Exception e){
-//			map.put("error_code", "502");
+//			e.printStackTrace();
+//			//map.put("error_code", "502");
 //		}
 //		finally{
 //			DbUtils.closeUtil(psUser);			

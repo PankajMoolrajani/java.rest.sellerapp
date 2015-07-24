@@ -23,12 +23,12 @@ import rest.sellerapp.controller.db.DbUtils;
 import com.google.gson.Gson;
 
 @Path("/user/table_data")
-public class User 
+public class UserTableDataController 
 {
 	@GET
 	@Path("/all")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String getUserTable()
+	public String getUserTableAllData()
 	{
 		Connection con = DbConnection.getConnection();
 		PreparedStatement psUserTable = null;
@@ -63,9 +63,9 @@ public class User
 	}
 	
 	@GET
-	@Path("/search")
+	@Path("/search_char/{textChar}")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String getUserTableSearch( @QueryParam("textChar") String textChar)
+	public String getUserTableSearchData( @PathParam("textChar") String textChar)
 	{				
 		Connection con = DbConnection.getConnection();
 		PreparedStatement psUserTableSearch = null;

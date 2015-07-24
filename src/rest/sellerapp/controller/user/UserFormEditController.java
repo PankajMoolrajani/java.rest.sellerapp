@@ -16,12 +16,13 @@ import com.google.gson.Gson;
 
 import rest.sellerapp.bean.user.UserCreateFormBean;
 import rest.sellerapp.controller.db.DbConnection;
+import rest.sellerapp.controller.db.DbUtils;
 
-@Path("/user/table_row_form")
+@Path("/user/get_form_data")
 public class UserFormEditController {
 
 	@GET
-	@Path("/id/{userId}")
+	@Path("/user_id/{userId}")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getUserFormData(@PathParam("userId") String userId)
 	{
@@ -29,13 +30,23 @@ public class UserFormEditController {
 		
 		Map<String,UserCreateFormBean> userFormDetailsMap = new HashMap <String,UserCreateFormBean>();
 		UserCreateFormBean beanUser = new UserCreateFormBean();		
+		
+		PreparedStatement psUserFormData = null;
+		ResultSet rsUserFormData = null;
+		
+		PreparedStatement psUserAddress = null;
+		ResultSet rsUserAddress = null;
+		
+		PreparedStatement psUserCat = null;
+		ResultSet rsUserCat = null;
 		try{						
 			String columnsUserTable = "*";
 			String tableUserTable = "user";
 			String conditionUserTable = "where id=?";
-			PreparedStatement psUserFormData = con.prepareStatement("select "+columnsUserTable+" from "+tableUserTable+" "+conditionUserTable);
+			psUserFormData = con.prepareStatement("select "+columnsUserTable+" from "+tableUserTable+" "+conditionUserTable);
 			psUserFormData.setInt(1, Integer.parseInt(userId));
-			ResultSet rsUserFormData = psUserFormData.executeQuery();
+
+			rsUserFormData = psUserFormData.executeQuery();
 			
 			rsUserFormData.next();			
 			beanUser.setFirstName(rsUserFormData.getString("name_first"));
@@ -48,9 +59,9 @@ public class UserFormEditController {
 			String columnsAddressTable = "*";
 			String tableAddressTable = "address";
 			String conditionAddressTable = "where id=?";
-			PreparedStatement psAddress = con.prepareStatement("select "+columnsAddressTable+" from "+tableAddressTable+" "+conditionAddressTable);
-			psAddress.setInt(1, addressId);
-			ResultSet rsUserAddress = psAddress.executeQuery();
+			psUserAddress = con.prepareStatement("select "+columnsAddressTable+" from "+tableAddressTable+" "+conditionAddressTable);
+			psUserAddress.setInt(1, addressId);
+			rsUserAddress = psUserAddress.executeQuery();
 			
 			rsUserAddress.next();
 			beanUser.setAddLineOne(rsUserAddress.getString("address_line_one"));
@@ -62,9 +73,9 @@ public class UserFormEditController {
 			String columnsUserCatTable = "id,name";
 			String tableUserCatTable = "user_category";
 			String conditionUserCatTable = "where id=?";
-			PreparedStatement psUserCat = con.prepareStatement("select "+columnsUserCatTable+" from "+tableUserCatTable+" "+conditionUserCatTable);
+			psUserCat = con.prepareStatement("select "+columnsUserCatTable+" from "+tableUserCatTable+" "+conditionUserCatTable);
 			psUserCat.setInt(1, userCatId);
-			ResultSet rsUserCat = psUserCat.executeQuery();
+			rsUserCat = psUserCat.executeQuery();
 			
 			rsUserCat.next();
 			beanUser.setUserCatId(rsUserCat.getInt("id"));
@@ -76,7 +87,13 @@ public class UserFormEditController {
 		e.printStackTrace();	
 		}
 		finally{
-			
+			DbUtils.closeUtil(rsUserCat);
+			DbUtils.closeUtil(psUserCat);			
+			DbUtils.closeUtil(rsUserAddress);
+			DbUtils.closeUtil(psUserAddress);
+			DbUtils.closeUtil(rsUserFormData);
+			DbUtils.closeUtil(psUserFormData);
+			DbUtils.closeUtil(con);
 		}
 		return new Gson().toJson(userFormDetailsMap);
 	}

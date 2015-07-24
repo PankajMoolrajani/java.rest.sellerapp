@@ -25,7 +25,7 @@ public class UserCategory
 	@GET
 	@Path("/category_list")	
 	@Produces(MediaType.TEXT_PLAIN)
-	public String getUserCategoriesForList()
+	public String getUserCategoriesForSelectList()
 	{		
 		Connection con = DbConnection.getConnection();
 		PreparedStatement psUserCatList = null;
