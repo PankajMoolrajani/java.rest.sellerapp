@@ -20,7 +20,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.google.gson.Gson;
 
-import rest.sellerapp.bean.user.UserCreateFormBean;
+import rest.sellerapp.bean.user.UserFormBean;
 import rest.sellerapp.controller.db.DbConnection;
 import rest.sellerapp.controller.db.DbUtils;
 
@@ -34,7 +34,7 @@ public class UserCreateFormController
 	@Path("/create")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String submitUserCreateFormData(UserCreateFormBean userFormBean){			
+	public String submitUserCreateFormData(UserFormBean userFormBean){			
 		Map<String, String> map = new HashMap<String,String>();
 		map.put("error_code", "");
 		

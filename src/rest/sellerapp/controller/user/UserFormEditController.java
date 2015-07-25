@@ -14,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.google.gson.Gson;
 
-import rest.sellerapp.bean.user.UserCreateFormBean;
+import rest.sellerapp.bean.user.UserFormBean;
 import rest.sellerapp.controller.db.DbConnection;
 import rest.sellerapp.controller.db.DbUtils;
 
@@ -28,8 +28,8 @@ public class UserFormEditController {
 	{
 		Connection con = DbConnection.getConnection();
 		
-		Map<String,UserCreateFormBean> userFormDetailsMap = new HashMap <String,UserCreateFormBean>();
-		UserCreateFormBean beanUser = new UserCreateFormBean();		
+		Map<String,UserFormBean> userFormDetailsMap = new HashMap <String,UserFormBean>();
+		UserFormBean beanUser = new UserFormBean();		
 		
 		PreparedStatement psUserFormData = null;
 		ResultSet rsUserFormData = null;

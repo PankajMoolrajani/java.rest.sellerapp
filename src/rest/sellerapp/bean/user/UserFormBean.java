@@ -1,23 +1,16 @@
 package rest.sellerapp.bean.user;
 
-public class UserCreateFormBean
+public class UserFormBean
 {
 	private String firstName,lastName,userCategory,phoneNumber,emailId,addLineOne,addLineTwo,city,state,zip;
-	private int userCatId ;
-	public int getUserCatId() {
-		return userCatId;
-	}
+	private int userId, userCatId ;	
 
-	public void setUserCatId(int userCatId) {
-		this.userCatId = userCatId;
-	}
-
-	public UserCreateFormBean() {
+	public UserFormBean() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public UserCreateFormBean(String firstName, String lastName,
+	public UserFormBean(String firstName, String lastName,
 			String userCategory, String phoneNumber, String emailId,
 			String addLineOne, String addLineTwo, String city, String state,
 			String zip) {
@@ -33,7 +26,42 @@ public class UserCreateFormBean
 		this.state = state;
 		this.zip = zip;
 	}
+		
+	public UserFormBean(String firstName, String lastName, String userCategory,
+			String phoneNumber, String emailId, String addLineOne,
+			String addLineTwo, String city, String state, String zip,
+			int userId, int userCatId) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.userCategory = userCategory;
+		this.phoneNumber = phoneNumber;
+		this.emailId = emailId;
+		this.addLineOne = addLineOne;
+		this.addLineTwo = addLineTwo;
+		this.city = city;
+		this.state = state;
+		this.zip = zip;
+		this.userId = userId;
+		this.userCatId = userCatId;
+	}
 
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUser_id(int userId) {
+		this.userId = userId;
+	}
+
+	public int getUserCatId() {
+		return userCatId;
+	}
+
+	public void setUserCatId(int userCatId) {
+		this.userCatId = userCatId;
+	}
+	
 	public String getFirstName() {
 		return firstName;
 	}

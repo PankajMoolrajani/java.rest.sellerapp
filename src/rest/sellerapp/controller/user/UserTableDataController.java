@@ -63,9 +63,9 @@ public class UserTableDataController
 	}
 	
 	@GET
-	@Path("/search_char/{textChar}")
+	@Path("/search_char/{textChars}")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String getUserTableSearchData( @PathParam("textChar") String textChar)
+	public String getUserTableSearchData( @PathParam("textChars") String textChar)
 	{				
 		Connection con = DbConnection.getConnection();
 		PreparedStatement psUserTableSearch = null;
