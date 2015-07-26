@@ -1,4 +1,4 @@
-package orders;
+package rest.sellerapp.orders;
 
 public class CreateOrderBean {
 	private String user_id, user_name, product_id;
