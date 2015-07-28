@@ -8,11 +8,22 @@ public  class VerifyAccessToken  {
 
 	
 
-    public boolean verifyAccessToken() {
+    public String verifyAccessToken(String accessToken) {
         
-        return false;
-        
+		if(verfyToken(accessToken))
+		{
+			// it will be a map
+			return "True";
+		}
+        else
+		{
+			// it will be a map
+			return "False";
+        }
     }	
-
+	public boolean verifyToken(String accessToken)
+	{
+		return false;
+	}
 
  }
