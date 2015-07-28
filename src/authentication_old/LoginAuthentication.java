@@ -1,6 +1,9 @@
-package login;
+package authentication_old;
 
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,18 +13,13 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import db.DbConnection;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 
-
-@Path("/auth")
+@Path("/authentication")
 public class LoginAuthentication
 {	
 	@GET
