@@ -19,7 +19,7 @@ import com.google.gson.GsonBuilder;
 import db.DbConnection;
 
 
-@Path("/authentication")
+//@Path("/authentication")
 public class LoginAuthentication
 {	
 	@GET

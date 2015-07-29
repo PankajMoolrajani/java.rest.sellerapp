@@ -8,10 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import com.google.gson.Gson;
@@ -22,11 +25,16 @@ import db.DbUtils;
 @Path("/user/get-user")
 public class GetUser 
 {
+	@Context private HttpServletRequest request;
+	
 	@GET
 	@Path("/all")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getAllUser()
 	{
+		HttpSession session = request.getSession(false);
+		System.out.println(session.getId());
+		
 		Connection con = DbConnection.getConnection();
 		PreparedStatement psUserTable = null;
 		ResultSet rsUserTable = null;
