@@ -18,7 +18,7 @@
       <ownedOperation xmi:id="_-HtMQDUaEeWTuKmFLnJFIA" name="veifyUserCredentials">
         <ownedParameter xmi:id="_Cm-M4DUbEeWTuKmFLnJFIA" name="return" type="_TEQJkDUZEeWTuKmFLnJFIA" direction="return"/>
         <ownedParameter xmi:id="_EQaP4DUbEeWTuKmFLnJFIA" name="username" type="_SAkfADUZEeWTuKmFLnJFIA"/>
-        <ownedParameter xmi:id="_GPytsDUbEeWTuKmFLnJFIA" name="password" type="_TEQJkDUZEeWTuKmFLnJFIA"/>
+        <ownedParameter xmi:id="_GPytsDUbEeWTuKmFLnJFIA" name="password" type="_SAkfADUZEeWTuKmFLnJFIA"/>
       </ownedOperation>
       <ownedOperation xmi:id="_YdP8oDUbEeWTuKmFLnJFIA" name="createUserSession"/>
       <ownedOperation xmi:id="_gnzjQDUbEeWTuKmFLnJFIA" name="createAccessToken">
