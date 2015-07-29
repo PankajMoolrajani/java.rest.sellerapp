@@ -4,6 +4,7 @@
     <packagedElement xmi:type="uml:Class" xmi:id="_WMLj0DUZEeWTuKmFLnJFIA" name="VerifyAccessToken">
       <ownedOperation xmi:id="_aBnkUDUZEeWTuKmFLnJFIA" name="verifyAccessToken">
         <ownedParameter xmi:id="_br3foDUZEeWTuKmFLnJFIA" name="return" type="_TEQJkDUZEeWTuKmFLnJFIA" direction="return"/>
+        <ownedParameter xmi:id="_Ku1AMDWcEeWrWNlaEsc8Ew" name="access_token" type="_SAkfADUZEeWTuKmFLnJFIA"/>
       </ownedOperation>
     </packagedElement>
     <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_TEQJkDUZEeWTuKmFLnJFIA" name="boolean"/>
