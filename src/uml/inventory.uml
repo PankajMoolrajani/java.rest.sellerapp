@@ -39,6 +39,40 @@
       </ownedOperation>
     </packagedElement>
     <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_PmTiQDapEeWVOqobvI2g6Q" name="Object"/>
+    <packagedElement xmi:type="uml:Class" xmi:id="_-KC_YDarEeWVOqobvI2g6Q" name="GetInventory">
+      <ownedOperation xmi:id="_EFBwEDasEeWVOqobvI2g6Q" name="getInventory">
+        <ownedParameter xmi:id="_EFCXIDasEeWVOqobvI2g6Q" name="return" type="_VPDlYDanEeWVOqobvI2g6Q" direction="return"/>
+        <ownedParameter xmi:id="_EFCXITasEeWVOqobvI2g6Q" name="identifier" type="_PmTiQDapEeWVOqobvI2g6Q"/>
+      </ownedOperation>
+      <ownedOperation xmi:id="_RLtScDasEeWVOqobvI2g6Q" name="recognizeIdentifier">
+        <ownedParameter xmi:id="_RLtScTasEeWVOqobvI2g6Q" name="return" type="_PmTiQDapEeWVOqobvI2g6Q" direction="return"/>
+        <ownedParameter xmi:id="_RLtScjasEeWVOqobvI2g6Q" name="identifier" type="_PmTiQDapEeWVOqobvI2g6Q"/>
+      </ownedOperation>
+      <ownedOperation xmi:id="_SNkYEDasEeWVOqobvI2g6Q" name="all">
+        <ownedParameter xmi:id="_SNkYETasEeWVOqobvI2g6Q" name="return" type="_VPDlYDanEeWVOqobvI2g6Q" direction="return"/>
+        <ownedParameter xmi:id="_SNkYEjasEeWVOqobvI2g6Q" name="identifier" visibility="public" type="_VPDlYDanEeWVOqobvI2g6Q"/>
+      </ownedOperation>
+      <ownedOperation xmi:id="_ThNKMDasEeWVOqobvI2g6Q" name="id">
+        <ownedParameter xmi:id="_ThNKMTasEeWVOqobvI2g6Q" name="return" type="_VPDlYDanEeWVOqobvI2g6Q" direction="return"/>
+        <ownedParameter xmi:id="_ThNKMjasEeWVOqobvI2g6Q" name="identifier" visibility="public" type="_ujzfwDaqEeWVOqobvI2g6Q"/>
+      </ownedOperation>
+      <ownedOperation xmi:id="_UeG3UDasEeWVOqobvI2g6Q" name="search">
+        <ownedParameter xmi:id="_UeG3UTasEeWVOqobvI2g6Q" name="return" type="_VPDlYDanEeWVOqobvI2g6Q" direction="return"/>
+        <ownedParameter xmi:id="_UeG3UjasEeWVOqobvI2g6Q" name="identifier" type="_VPDlYDanEeWVOqobvI2g6Q"/>
+      </ownedOperation>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_m8uHsDasEeWVOqobvI2g6Q" name="UpdateInventory">
+      <ownedOperation xmi:id="_tVp_sDasEeWVOqobvI2g6Q" name="updateInvetory">
+        <ownedParameter xmi:id="_upBFADasEeWVOqobvI2g6Q" name="return" type="_VPDlYDanEeWVOqobvI2g6Q" direction="return"/>
+        <ownedParameter xmi:id="_wbM0UDasEeWVOqobvI2g6Q" name="bean_inventory" type="_q4qyIDanEeWVOqobvI2g6Q"/>
+      </ownedOperation>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_AEFNsDatEeWVOqobvI2g6Q" name="UpdateInventoryCategory">
+      <ownedOperation xmi:id="_GmxeoDatEeWVOqobvI2g6Q" name="updateInventoryCategory">
+        <ownedParameter xmi:id="_ImVioDatEeWVOqobvI2g6Q" name="return" type="_VPDlYDanEeWVOqobvI2g6Q" direction="return"/>
+        <ownedParameter xmi:id="_KxpjoDatEeWVOqobvI2g6Q" name="bean_invetory_category" type="_C-2vADaoEeWVOqobvI2g6Q"/>
+      </ownedOperation>
+    </packagedElement>
     <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_ujzfwDaqEeWVOqobvI2g6Q" name="int"/>
   </packagedElement>
 </uml:Model>
