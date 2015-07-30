@@ -1,4 +1,4 @@
-package inventory;
+package inventory_old;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
