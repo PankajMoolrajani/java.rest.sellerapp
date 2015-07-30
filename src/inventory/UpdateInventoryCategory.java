@@ -8,7 +8,7 @@ public  class UpdateInventoryCategory  {
 
 	
 
-    public String updateInventoryCategory(BeanInvetoryCategory bean_invetory_category) {
+    public String updateInventoryCategory(BeanInventoryCategory bean_invetory_category) {
         
         return null;
         

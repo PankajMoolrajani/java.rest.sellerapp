@@ -15,7 +15,7 @@
         <ownedParameter xmi:id="_GSMIADaoEeWVOqobvI2g6Q" name="bean_inventory_category" visibility="private" type="_C-2vADaoEeWVOqobvI2g6Q"/>
       </ownedOperation>
     </packagedElement>
-    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_C-2vADaoEeWVOqobvI2g6Q" name="BeanInvetoryCategory"/>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_C-2vADaoEeWVOqobvI2g6Q" name="BeanInventoryCategory"/>
     <packagedElement xmi:type="uml:Class" xmi:id="_giP7cDaoEeWVOqobvI2g6Q" name="GetInventoryCategory">
       <ownedOperation xmi:id="_qA9RkDaoEeWVOqobvI2g6Q" name="getInventoryCategory">
         <ownedParameter xmi:id="_74i-MDaoEeWVOqobvI2g6Q" name="return" type="_VPDlYDanEeWVOqobvI2g6Q" direction="return"/>

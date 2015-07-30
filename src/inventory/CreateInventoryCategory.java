@@ -8,7 +8,7 @@ public  class CreateInventoryCategory  {
 
 	
 
-    public String createInventoryCategory(BeanInvetoryCategory bean_inventory_category) {
+    public String createInventoryCategory(BeanInventoryCategory bean_inventory_category) {
         
         return null;
         
