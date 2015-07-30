@@ -32,8 +32,7 @@ public class GetUser
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getAllUser()
 	{
-		HttpSession session = request.getSession(false);
-		System.out.println(session.getId());
+		HttpSession session = request.getSession(false);		
 		
 		Connection con = DbConnection.getConnection();
 		PreparedStatement psUserTable = null;
@@ -45,7 +44,7 @@ public class GetUser
 			String tableUser = "user";
 			String columnsUser = "id,name_user,emailid,phone";
 			//String condition_user = " where map_url=?";	
-			psUserTable = con.prepareStatement("select "+columnsUser+" from "+tableUser);
+			psUserTable = con.prepareStatement("SELECT "+columnsUser+" FROM "+tableUser);
 			rsUserTable= psUserTable.executeQuery();			
 			
 			while(rsUserTable.next())
@@ -82,8 +81,8 @@ public class GetUser
 		{
 			String tableUser = "user";
 			String columnsUserSearch = "id,name_user,emailid,phone";
-			String conditionUserSearch = "WHERE name_user LIKE ?";				
-			psUserTableSearch = con.prepareStatement("select "+columnsUserSearch+" from "+tableUser+" "+conditionUserSearch);
+			String conditionUserSearch = "name_user LIKE ?";				
+			psUserTableSearch = con.prepareStatement("SELECT "+columnsUserSearch+" FROM "+tableUser+" WHERE "+conditionUserSearch);
 			psUserTableSearch.setString(1, textChar+"%");
 			rsUserTableSearch= psUserTableSearch.executeQuery();										
 			while(rsUserTableSearch.next())
@@ -130,8 +129,8 @@ public class GetUser
 		try{						
 			String columnsUserTable = "*";
 			String tableUserTable = "user";
-			String conditionUserTable = "where id=?";
-			psUserFormData = con.prepareStatement("select "+columnsUserTable+" from "+tableUserTable+" "+conditionUserTable);
+			String conditionUserTable = "id=?";
+			psUserFormData = con.prepareStatement("SELECT "+columnsUserTable+" FROM "+tableUserTable+" WHERE "+conditionUserTable);
 			psUserFormData.setInt(1, Integer.parseInt(userId));
 
 			rsUserFormData = psUserFormData.executeQuery();
@@ -146,8 +145,8 @@ public class GetUser
 			
 			String columnsAddressTable = "*";
 			String tableAddressTable = "address";
-			String conditionAddressTable = "where id=?";
-			psUserAddress = con.prepareStatement("select "+columnsAddressTable+" from "+tableAddressTable+" "+conditionAddressTable);
+			String conditionAddressTable = "id=?";
+			psUserAddress = con.prepareStatement("SELECT "+columnsAddressTable+" FROM "+tableAddressTable+" WHERE "+conditionAddressTable);
 			psUserAddress.setInt(1, addressId);
 			rsUserAddress = psUserAddress.executeQuery();
 			
@@ -160,8 +159,8 @@ public class GetUser
 			
 			String columnsUserCatTable = "id,name";
 			String tableUserCatTable = "user_category";
-			String conditionUserCatTable = "where id=?";
-			psUserCat = con.prepareStatement("select "+columnsUserCatTable+" from "+tableUserCatTable+" "+conditionUserCatTable);
+			String conditionUserCatTable = "id=?";
+			psUserCat = con.prepareStatement("SELECT "+columnsUserCatTable+" FROM "+tableUserCatTable+" WHERE "+conditionUserCatTable);
 			psUserCat.setInt(1, userCatId);
 			rsUserCat = psUserCat.executeQuery();
 			
