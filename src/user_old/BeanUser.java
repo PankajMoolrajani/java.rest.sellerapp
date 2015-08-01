@@ -1,4 +1,4 @@
-package user;
+package user_old;
 
 public class BeanUser {
 	private String userName,firstName,lastName,userCategory,phoneNumber,emailId,addLineOne,addLineTwo,city,state,zip;

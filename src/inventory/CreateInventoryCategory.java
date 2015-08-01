@@ -3,7 +3,9 @@ package inventory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +28,7 @@ public  class CreateInventoryCategory  {
 	@Produces(MediaType.TEXT_PLAIN)
 	
     public String createInventoryCategory(BeanInventoryCategory bean_inventory_category) {
-        
+        int id_inventory_category = 0;
 		Map<String, Object> map = new HashMap<String,Object>();
 		map.put("id", bean_inventory_category.getId());
 		map.put("id_parent_category", bean_inventory_category.getIdParentCategory());
@@ -42,24 +44,24 @@ public  class CreateInventoryCategory  {
 		
 		try{
 			
-			PreparedStatement ps = con.prepareStatement(query);
+			PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			
 			ps.setInt(1, bean_inventory_category.getIdParentCategory());
 			ps.setInt(2, bean_inventory_category.getIdTax());
 			ps.setString(3, bean_inventory_category.getName());
 			ps.setString(4, bean_inventory_category.getNameTable());
 			
-			Boolean ps_result = ps.execute();
-			System.out.println(ps_result);
-			
-			map.put("result", ps_result);
+			ResultSet rs =  ps.getGeneratedKeys();
+			if (rs.next()){
+				id_inventory_category = rs.getInt(1);
+			}
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		
+		map.put("result", id_inventory_category);
 		return new Gson().toJson(map);	
         
     }	
