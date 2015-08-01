@@ -2,6 +2,12 @@
 
 package user;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -82,10 +88,40 @@ public  class UserCategory  {
     public String updateUserCategory(BeanUserCategory bean_user_category) {
         int id_user_category = 0;
 		Map<String, Object> map = new HashMap<String,Object>();
-		map.put("id",bean_user_category.getId());
-		map.put("name", bean_user_category.getName());
-		map.put("description", bean_user_category.getDescription());
+		
+		/*try {
+			
+			BeanInfo bean_info = Introspector.getBeanInfo(bean_user_category.getClass());
+			
+			for (PropertyDescriptor pd : bean_info.getPropertyDescriptors()) {
+		        
+				Method reader = pd.getReadMethod();
+		        
+		        if (reader != null){
+		        	System.out.println(map);
+		            map.put(pd.getName(),reader.invoke(bean_user_category));
+		        	
+		        }
+		    }
+			
+		} catch (IntrospectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		map.remove("class");
         
+		System.out.println(map);
+		*/
         Connection con = DbConnection.getConnection();
 		String table_name = "user_category";
 		String column_name = "name";
@@ -95,25 +131,22 @@ public  class UserCategory  {
 		
 		try {
 			
-			PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement ps = con.prepareStatement(query);
 			
 			ps.setString(1, bean_user_category.getName());
 			ps.setString(2, bean_user_category.getDescription());
 			ps.setInt(3, bean_user_category.getId());
 			
 			int rows_affected =  ps.executeUpdate();
-			System.out.println(rows_affected);
 			if (rows_affected != 0){
 				
-				ResultSet rs = ps.getGeneratedKeys();
-				
-				if (rs.next()){
-				
-					id_user_category = rs.getInt(1);
-					map.put("id_user_category", id_user_category);
-				
-				}
+				System.out.println("user_category : update : "+bean_user_category.getId()+" : success");
+				map.put("result", "success");
 			
+			}
+			else {
+				System.out.println("user_category : update : "+bean_user_category.getId()+" : fail");
+				map.put("result", "fail");
 			}
 		
 		} catch (SQLException e) {
@@ -131,7 +164,7 @@ public  class UserCategory  {
 	@Produces(MediaType.TEXT_PLAIN)
 	
     public String deleteUserCategory(BeanUserCategory bean_user_category) {
-        int id_user_category = 0;
+		
 		Map<String, Object> map = new HashMap<String,Object>();
 		map.put("id",bean_user_category.getId());
 		map.put("name", bean_user_category.getName());
@@ -152,12 +185,12 @@ public  class UserCategory  {
 			
 			if (rows_affected != 0){
 				
-				System.out.println("user_category:delete : "+bean_user_category.getId()+" : success");
+				System.out.println("user_category : delete : "+bean_user_category.getId()+" : success");
 				map.put("result", "success");
 			
 			}
 			else {
-				System.out.println("user_category:delete:"+bean_user_category.getId()+":fail");
+				System.out.println("user_category : delete:"+bean_user_category.getId()+" : fail");
 				map.put("result", "fail");
 			}
 		
