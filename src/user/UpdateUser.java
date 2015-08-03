@@ -32,10 +32,10 @@ public class UpdateUser
 	public void createUser(Map<String,String> map, BeanUser beanUser)
 	{
 		Connection con = DbConnection.getConnection();			
-		PreparedStatement ps = null;
-		
+		PreparedStatement ps = null;		
 		try
 		{
+			con.setAutoCommit(false);
 			String columnsUser="id_user_category=?,name_first=?,name_last=?,emailid=?,phone=?";
 			String tableUser="user";			
 			String conditionUser = "id=?";
@@ -72,8 +72,9 @@ public class UpdateUser
 			ps.setString(5, beanUser.getZip());
 			ps.setInt(6, address_id);
 			ps.executeUpdate();
+			con.commit();
 		}
-		catch(Exception e){
+		catch(Exception e){			
 			e.printStackTrace();
 			//map.put("error_code", "502");
 		}

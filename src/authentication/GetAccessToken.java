@@ -137,9 +137,6 @@ public  class GetAccessToken  {
     	SecureRandom random = new SecureRandom();
     	String access_token = new BigInteger(130, random).toString(32);
     	
-        return access_token;
-        
+        return access_token;        
     }	
-
-
  }

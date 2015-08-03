@@ -408,13 +408,14 @@ public class CreateUser
 
 	}
 	public void createUser(Map<String,String> map)
-	{
+	{		
 //		Connection con = DbConnection.getConnection();
 //		
 //		System.out.println("in create user function");
 //		PreparedStatement psUser = null;
 //		try
 //		{
+//			con.setAutoCommit(false);
 //			String columnsUser="id,id_user_category,name_first,name_last,emailid,phone";
 //			String tableUser="user";
 //			String parametersUser="NULL,?,?,?,?,?";
@@ -481,6 +482,7 @@ public class CreateUser
 //			PreparedStatement psUserCat = con.prepareStatement("insert into "+tableUserCat+"("+columnsUserCat+") values("+parametersUserCat+");");		//
 //			psUserCat.setInt(1, lastInsertedUserId);
 //			psUserCat.execute();
+//			con.commit();
 //			System.out.println("Forth checkpoint clear");	
 //		}
 //		catch(Exception e){
