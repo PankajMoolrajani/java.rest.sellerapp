@@ -1,138 +1,161 @@
 package user;
 
-public class BeanUser {
-	private String user_name,first_name,last_name,user_category,phone_number,email_id,add_line_one,add_line_two,city,state,zip;
-	private int user_id, user_cat_id ;	
-
+public  class BeanUser  {
+	int id, id_pass, id_address, id_user_category, zip;
+	String password, question, ans, name_user, name_first, name_last, emailid, phone;
+	String address_line_one, address_line_two, city, state, country, landmark;
+	
 	public BeanUser() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	
-
-	public BeanUser(int user_id, String user_name, String email_id, String phone_number) {
+	public BeanUser(int id, int id_pass, int id_address, int id_user_category,
+			int zip, String password, String question, String ans,
+			String name_user, String name_first, String name_last,
+			String emailid, String phone, String address_line_one,
+			String address_line_two, String city, String state, String country,
+			String landmark) {
 		super();
-		this.user_name = user_name;
-		this.phone_number = phone_number;
-		this.email_id = email_id;
-		this.user_id = user_id;
-	}
-
-
-	public BeanUser(String first_name, String last_name,
-			String user_category, String phone_number, String email_id,
-			String add_line_one, String add_line_two, String city, String state,
-			String zip) {
-		super();
-		this.first_name = first_name;
-		this.last_name = last_name;
-		this.user_category = user_category;
-		this.phone_number = phone_number;
-		this.email_id = email_id;
-		this.add_line_one = add_line_one;
-		this.add_line_two = add_line_two;
+		this.id = id;
+		this.id_pass = id_pass;
+		this.id_address = id_address;
+		this.id_user_category = id_user_category;
+		this.zip = zip;
+		this.password = password;
+		this.question = question;
+		this.ans = ans;
+		this.name_user = name_user;
+		this.name_first = name_first;
+		this.name_last = name_last;
+		this.emailid = emailid;
+		this.phone = phone;
+		this.address_line_one = address_line_one;
+		this.address_line_two = address_line_two;
 		this.city = city;
 		this.state = state;
+		this.country = country;
+		this.landmark = landmark;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getIdPass() {
+		return id_pass;
+	}
+
+	public void setIdPass(int id_pass) {
+		this.id_pass = id_pass;
+	}
+
+	public int getIdAddress() {
+		return id_address;
+	}
+
+	public void setIdAddress(int id_address) {
+		this.id_address = id_address;
+	}
+
+	public int getIdUserCategory() {
+		return id_user_category;
+	}
+
+	public void setIdUserCategory(int id_user_category) {
+		this.id_user_category = id_user_category;
+	}
+
+	public int getZip() {
+		return zip;
+	}
+
+	public void setZip(int zip) {
 		this.zip = zip;
 	}
-		
-	public BeanUser(String first_name, String last_name, String user_category,
-			String phone_number, String email_id, String add_line_one,
-			String add_line_two, String city, String state, String zip,
-			int user_id, int user_cat_id) {
-		super();
-		this.first_name = first_name;
-		this.last_name = last_name;
-		this.user_category = user_category;
-		this.phone_number = phone_number;
-		this.email_id = email_id;
-		this.add_line_one = add_line_one;
-		this.add_line_two = add_line_two;
-		this.city = city;
-		this.state = state;
-		this.zip = zip;
-		this.user_id = user_id;
-		this.user_cat_id = user_cat_id;
+
+	public String getPassword() {
+		return password;
 	}
 
-	public int getUserId() {
-		return user_id;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
-	public void setUser_id(int user_id) {
-		this.user_id = user_id;
+	public String getQuestion() {
+		return question;
 	}
 
-	public int getUserCatId() {
-		return user_cat_id;
+	public void setQuestion(String question) {
+		this.question = question;
 	}
 
-	public void setUserCatId(int user_cat_id) {
-		this.user_cat_id = user_cat_id;
-	}
-	
-	public String getFirstName() {
-		return first_name;
-	}	
-
-	public String getUserName() {
-		return user_name;
+	public String getAns() {
+		return ans;
 	}
 
-	public void setUserName(String user_name) {
-		this.user_name = user_name;
+	public void setAns(String ans) {
+		this.ans = ans;
 	}
 
-	public void setFirstName(String first_name) {
-		this.first_name = first_name;
+	public String getNameUser() {
+		return name_user;
 	}
 
-	public String getLastName() {
-		return last_name;
+	public void setNameUser(String name_user) {
+		this.name_user = name_user;
 	}
 
-	public void setLastName(String last_name) {
-		this.last_name = last_name;
+	public String getNameFirst() {
+		return name_first;
 	}
 
-	public String getUserCategory() {
-		return user_category;
+	public void setNameFirst(String name_first) {
+		this.name_first = name_first;
 	}
 
-	public void setUserCategory(String user_category) {
-		this.user_category = user_category;
+	public String getNameLast() {
+		return name_last;
 	}
 
-	public String getPhoneNumber() {
-		return phone_number;
+	public void setNameLast(String name_last) {
+		this.name_last = name_last;
 	}
 
-	public void setPhoneNumber(String phone_number) {
-		this.phone_number = phone_number;
+	public String getEmailid() {
+		return emailid;
 	}
 
-	public String getEmailId() {
-		return email_id;
+	public void setEmailid(String emailid) {
+		this.emailid = emailid;
 	}
 
-	public void setEmailId(String email_id) {
-		this.email_id = email_id;
+	public String getPhone() {
+		return phone;
 	}
 
-	public String getAddLineOne() {
-		return add_line_one;
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
-	public void setAddLineOne(String add_line_one) {
-		this.add_line_one = add_line_one;
+	public String getAddressLineOne() {
+		return address_line_one;
 	}
 
-	public String getAddLineTwo() {
-		return add_line_two;
+	public void setAddressLineOne(String address_line_one) {
+		this.address_line_one = address_line_one;
 	}
 
-	public void setAddLineTwo(String add_line_two) {
-		this.add_line_two = add_line_two;
+	public String getAddressLineTwo() {
+		return address_line_two;
+	}
+
+	public void setAddressLineTwo(String address_line_two) {
+		this.address_line_two = address_line_two;
 	}
 
 	public String getCity() {
@@ -151,11 +174,21 @@ public class BeanUser {
 		this.state = state;
 	}
 
-	public String getZip() {
-		return zip;
+	public String getCountry() {
+		return country;
 	}
 
-	public void setZip(String zip) {
-		this.zip = zip;
+	public void setCountry(String country) {
+		this.country = country;
 	}
-}
+
+	public String getLandmark() {
+		return landmark;
+	}
+
+	public void setLandmark(String landmark) {
+		this.landmark = landmark;
+	}
+	
+	
+ }

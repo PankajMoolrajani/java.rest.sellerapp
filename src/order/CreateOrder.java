@@ -25,7 +25,6 @@ public class CreateOrder {
 	@Produces(MediaType.TEXT_PLAIN)
 	
 	public String create_order_test(BeanCreateOrder orderBean){
-		System.out.println("order create");
 		Map<String, Object> map = new HashMap<String,Object>();
 		
 		map.put("id_marketplace", orderBean.getMarketplaceId());
@@ -63,10 +62,7 @@ public class CreateOrder {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		//insert data to db
-		//get id of ineserted row
-		//return the new id in a map object json
+
 		
 		
 		return new Gson().toJson(map);	

@@ -4,11 +4,11 @@ package inventory;
 
 
 
-public  class GetInventory  {
+public  class GetInventoryCategory  {
 
 	
 
-    public String getInventory(Object identifier) {
+    public String getInventoryCategory(Object identifier) {
         
         return null;
         

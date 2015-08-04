@@ -1,4 +1,4 @@
-package inventory;
+package inventory_old;
 
 public class BeanTags
 {
