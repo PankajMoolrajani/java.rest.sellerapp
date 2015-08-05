@@ -19,76 +19,88 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
 import com.google.gson.Gson;
 
 import db.DbConnection;
 import db.DbUtils;
 import user.BeanUser;
 
+@Path("/user")
 public  class User  {
 
 	private Set<Integer> addressIdSet=new HashSet<Integer>();
 	private String TrimedPhNum ;
 	
+	@POST
+	@Path("/create")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)	
     public String createUser(BeanUser bean_user) {
-        
-        
-    	String name_user = bean_user.getPassword();
-    	String password = bean_user.getPassword();
+        		
+		Map<String,String> result_map = goForUserCreate(bean_user);
+		return new Gson().toJson(result_map);
+		
+//    	String name_user = bean_user.getPassword();
+//    	String password = bean_user.getPassword();
+//    	
+//    	Boolean verification_credentials = this.verifyPasswordComplexity(name_user, password);
+//    	if (verification_credentials == true){
+//    		//insert password
+//        	//insert address
+//        	//insert user
+//    		Connection con = DbConnection.getConnection();
+//    		
+//    		int id_pass = 0;
+//    		String table_name = "pass";
+//    		String column_names = "password, question, ans";
+//    		String values = "?, ?, ?";
+//    		String query = "INSERT INTO "+table_name+"("+column_names+")"+" VALUES "+"("+values+")";
+//    		
+//    		
+//    		try {
+//    			
+//    			PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+//    			
+//    			ps.setString(1, bean_user.getPassword());
+//    			ps.setString(2, bean_user.getQuestion());
+//    			ps.setString(3, bean_user.getAns());
+//    			
+//    			int rows_affected =  ps.executeUpdate();
+//    			
+//    			if (rows_affected != 0){
+//    				
+//    				ResultSet rs = ps.getGeneratedKeys();
+//    				
+//    				if (rs.next()){
+//    				
+//    					id_pass = rs.getInt(1);
+//    					System.out.println(id_pass);
+//    					
+//    					Map<String,String> result_map = goForUserCreate(bean_user);
+//    				}    			
+//    			}
+//    		
+//    		} catch (SQLException e) {
+//    			// TODO Auto-generated catch block
+//    			e.printStackTrace();
+//    		}
+//    	}
     	
-    	Boolean verification_credentials = this.verifyPasswordComplexity(name_user, password);
-    	if (verification_credentials == true){
-    		//insert password
-        	//insert address
-        	//insert user
-    		Connection con = DbConnection.getConnection();
-    		
-    		int id_pass = 0;
-    		String table_name = "pass";
-    		String column_names = "password, question, ans";
-    		String values = "?, ?, ?";
-    		String query = "INSERT INTO "+table_name+"("+column_names+")"+" VALUES "+"("+values+")";
-    		
-    		
-    		try {
-    			
-    			PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-    			
-    			ps.setString(1, bean_user.getPassword());
-    			ps.setString(2, bean_user.getQuestion());
-    			ps.setString(3, bean_user.getAns());
-    			
-    			int rows_affected =  ps.executeUpdate();
-    			
-    			if (rows_affected != 0){
-    				
-    				ResultSet rs = ps.getGeneratedKeys();
-    				
-    				if (rs.next()){
-    				
-    					id_pass = rs.getInt(1);
-    					System.out.println(id_pass);
-    					
-    					goForUserCreate(bean_user);
-    				}
-    			
-    			}
-    		
-    		} catch (SQLException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		}
-    	}
-    	
-    	return null;
-        
-        
+		//return new Gson().toJson(result_map);
     }
     
-    public Map<String,String> goForUserCreate(BeanUser bean_user)
+    public Map<String,String> goForUserCreate(user.BeanUser bean_user)
     {
-    	Map<String, String> map_result = new HashMap<String,String>();
-    	map_result.put("error_code", "");
+    	Map<String, String> result_map = new HashMap<String,String>();
+    	result_map.put("error_code", "");
 		
 		
 		Map<String,Object> objectAsMap = new HashMap<String,Object>();
@@ -113,52 +125,56 @@ public  class User  {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
-		
-		if(validateOrder(objectAsMap , map_result)){			
+		//System.out.println(objectAsMap);
+		if(validateUser(objectAsMap , result_map)){			
 			//System.out.println("In validate order true");
-			goForOrder(objectAsMap , map_result);
+			goForUserCreate(objectAsMap , result_map);
 		}
-		return null;
-    }
-	public boolean validateOrder(Map<String,Object> objectAsMap , Map<String,String> map_result)
-	{
-//		System.out.println("validateZip "+validateZip(objectAsMap));
-//		System.out.println("validateEmail "+validateEmail(objectAsMap));
-//		System.out.println("validatePhone "+validatePhone(objectAsMap));
-//		System.out.println("validateNameCityState "+validateNameCityState(objectAsMap));
 				
-		if(validateEmptyFields(objectAsMap, map_result) && validateHtmlInjection(objectAsMap, map_result) && validateZip(objectAsMap,map_result) && validateEmail(objectAsMap,map_result) && validatePhone(objectAsMap,map_result) && validateCategory(objectAsMap,map_result) && validateNameCityState(objectAsMap,map_result))		
+		return result_map;
+    }
+	public boolean validateUser(Map<String,Object> objectAsMap , Map<String,String> result_map)
+	{
+//		System.out.println("validateZip "+validateZip(objectAsMap, result_map));
+//		System.out.println("validateEmail "+validateEmail(objectAsMap, result_map));
+//		System.out.println("validatePhone "+validatePhone(objectAsMap, result_map));
+//		System.out.println("validateNameCityState "+validateNameCityState(objectAsMap, result_map));
+//		System.out.println("validate empty fields "+validateEmptyFields(objectAsMap, result_map));
+//		System.out.println("validate injuction "+validateHtmlInjection(objectAsMap, result_map));
+//		System.out.println("validate category "+validateCategory(objectAsMap,result_map));
+		
+		if(validateEmptyFields(objectAsMap, result_map) && validateHtmlInjection(objectAsMap, result_map) && validateZip(objectAsMap,result_map) && validateEmail(objectAsMap,result_map) && validatePhone(objectAsMap,result_map) && validateCategory(objectAsMap,result_map) && validateNameCityState(objectAsMap,result_map))		
 		{
 			return true;		
 		}
 		else
 		{
-			map_result.put("error_code", "505");
+			result_map.put("error_code", "505");
 			return false;
-		}		
+		}			
 	}
 	
-	public boolean validateEmptyFields(Map<String,Object> objectAsMap, Map<String,String> map_result)
+	public boolean validateEmptyFields(Map<String,Object> objectAsMap, Map<String,String> result_map)
 	{
-		if(objectAsMap.get("form_user_fname_text").toString().isEmpty() || objectAsMap.get("form_user_lname_text").toString().isEmpty() || objectAsMap.get("form_user_category_select").toString().isEmpty() ||  objectAsMap.get("form_user_phone_text").toString().isEmpty() || objectAsMap.get("form_user_email_text").toString().isEmpty() || objectAsMap.get("form_user_add1_text").toString().isEmpty() || objectAsMap.get("form_user_add2_text").toString().isEmpty() || objectAsMap.get("form_user_city_text").toString().isEmpty() || objectAsMap.get("form_user_state_text").toString().isEmpty() ||objectAsMap.get("form_user_zip_text").toString().isEmpty())
+		if(objectAsMap.get("nameFirst").toString().isEmpty() || objectAsMap.get("nameLast").toString().isEmpty() || objectAsMap.get("idUserCategory").toString().isEmpty() ||  objectAsMap.get("phone").toString().isEmpty() || objectAsMap.get("emailid").toString().isEmpty() || objectAsMap.get("addressLineOne").toString().isEmpty() || objectAsMap.get("addressLineTwo").toString().isEmpty() || objectAsMap.get("city").toString().isEmpty() || objectAsMap.get("state").toString().isEmpty() ||objectAsMap.get("zip").toString().isEmpty())
 			return false;		
 		else
 			return true;		
 	}
 	
-	private boolean validateHtmlInjection(Map<String,Object> objectAsMap, Map<String,String> map_result)
+	private boolean validateHtmlInjection(Map<String,Object> objectAsMap, Map<String,String> result_map)
 	{
 		Pattern pattern = Pattern.compile("<(\"[^\"]*\"|'[^']*'|[^'\">])*>");
 		
-	    Matcher matcherFName = pattern.matcher(objectAsMap.get("form_user_fname_text").toString());
-	    Matcher matcherLname = pattern.matcher(objectAsMap.get("form_user_lname_text").toString());	    
-		Matcher matcherPhone = pattern.matcher(objectAsMap.get("form_user_phone_text").toString());
-	    Matcher matcherEmail = pattern.matcher(objectAsMap.get("form_user_email_text").toString());
-		Matcher matcherAddOne = pattern.matcher(objectAsMap.get("form_user_add1_text").toString());
-	    Matcher matcherAddTwo = pattern.matcher(objectAsMap.get("form_user_add2_text").toString());
-	    Matcher matcherCity = pattern.matcher(objectAsMap.get("form_user_city_text").toString());
-	    Matcher matcherState = pattern.matcher(objectAsMap.get("form_user_state_text").toString());
-	    Matcher matcherZip = pattern.matcher(objectAsMap.get("form_user_zip_text").toString());
+	    Matcher matcherFName = pattern.matcher(objectAsMap.get("nameFirst").toString());
+	    Matcher matcherLname = pattern.matcher(objectAsMap.get("nameLast").toString());	    
+		Matcher matcherPhone = pattern.matcher(objectAsMap.get("phone").toString());
+	    Matcher matcherEmail = pattern.matcher(objectAsMap.get("emailid").toString());
+		Matcher matcherAddOne = pattern.matcher(objectAsMap.get("addressLineOne").toString());
+	    Matcher matcherAddTwo = pattern.matcher(objectAsMap.get("addressLineTwo").toString());
+	    Matcher matcherCity = pattern.matcher(objectAsMap.get("city").toString());
+	    Matcher matcherState = pattern.matcher(objectAsMap.get("state").toString());
+	    Matcher matcherZip = pattern.matcher(objectAsMap.get("zip").toString());
 	    	    
 	    if(matcherFName.matches() || 
 	    		matcherLname.matches() || 
@@ -170,63 +186,62 @@ public  class User  {
 	    		matcherState.matches() ||
 	    		matcherZip.matches()){
 	    	
-	    	//System.out.println("regex true section");
+	    	result_map.put("userStatus", "HTML Injection");
 	    	return false;
 	    }
 	    else 
-	    {
-	    	map_result.put("userStatus", "HTML Injection");
+	    {	    		    
 	    	return true;
 	    }		
 	}
 	
-	public boolean validateZip(Map<String,Object>objectAsMap , Map<String,String> map_result)
+	public boolean validateZip(Map<String,Object>objectAsMap , Map<String,String> result_map)
 	{
 		Pattern patternPhZip = Pattern.compile("[0-9]+");	     
-	    Matcher matcherZip = patternPhZip.matcher(objectAsMap.get("form_user_zip_text").toString());
+	    Matcher matcherZip = patternPhZip.matcher(objectAsMap.get("zip").toString());
 	     if(matcherZip.matches())
 	     {
 	    	 return true;
 	     }
 	     else 
 	     {
-	    	 map_result.put("userStatus", "InvalidZip");
+	    	 result_map.put("userStatus", "InvalidZip");
 	    	 return false;
 	     }
 	}
-	public boolean validateEmail(Map<String,Object>objectAsMap, Map<String,String> map_result)
+	public boolean validateEmail(Map<String,Object>objectAsMap, Map<String,String> result_map)
 	{
 		 Pattern pattern = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
-	     Matcher matcher = pattern.matcher(objectAsMap.get("form_user_email_text").toString());
+	     Matcher matcher = pattern.matcher(objectAsMap.get("emailid").toString());
 	     if(matcher.matches())
 	     {
 	    	return true; 
 	     }
 	     else
 	     {
-	    	 map_result.put("userStatus", "InvalidEmail");
+	    	 result_map.put("userStatus", "InvalidEmail");
 	    	 return false;
 	     }
 	}
-	public boolean validatePhone(Map<String,Object>objectAsMap, Map<String,String> map_result)
+	public boolean validatePhone(Map<String,Object>objectAsMap, Map<String,String> result_map)
 	{
 		 Pattern pattern = Pattern.compile("^(\\+?\\d{1,4}[\\s-])?(?!0+\\s+,?$)\\d{10}\\s*,?$");
-	     Matcher matcher = pattern.matcher(objectAsMap.get("form_user_phone_text").toString());
+	     Matcher matcher = pattern.matcher(objectAsMap.get("phone").toString());
 	     if(matcher.matches())
 	     {
 	    	return true; 
 	     }
 	     else
 	     {
-	    	 map_result.put("userStatus", "InvalidPhone");
+	    	 result_map.put("userStatus", "InvalidPhone");
 	    	 return false;
 	     }
 	}
-	public boolean validateCategory(Map<String,Object>objectAsMap, Map<String,String> map_result)
+	public boolean validateCategory(Map<String,Object>objectAsMap, Map<String,String> result_map)
 	{
-		if(objectAsMap.get("form_user_category_select").equals("Select Category"))
+		if(objectAsMap.get("idUserCategory").equals("Select Category"))
 		{
-			map_result.put("userStatus", "Select Category");
+			result_map.put("userStatus", "Select Category");
 			return false;
 		}
 		else
@@ -234,101 +249,104 @@ public  class User  {
 			return true;
 		}
 	}
-	public boolean validateNameCityState(Map<String,Object>objectAsMap, Map<String,String> map_result)
+	public boolean validateNameCityState(Map<String,Object>objectAsMap, Map<String,String> result_map)
 	{
 		 Pattern pattern = Pattern.compile("^[a-zA-Z]+(?:(?:\\s+|-)[a-zA-Z]+)*$");
-	     Matcher matcherAddOne = pattern.matcher(objectAsMap.get("form_user_fname_text").toString());
-	     Matcher matcherAddTwo = pattern.matcher(objectAsMap.get("form_user_lname_text").toString());
-	     Matcher matcherCity = pattern.matcher(objectAsMap.get("form_user_city_text").toString());
-	     Matcher matcherState = pattern.matcher(objectAsMap.get("form_user_state_text").toString());
+	     Matcher matcherAddOne = pattern.matcher(objectAsMap.get("nameFirst").toString());
+	     Matcher matcherAddTwo = pattern.matcher(objectAsMap.get("nameLast").toString());
+	     Matcher matcherCity = pattern.matcher(objectAsMap.get("city").toString());
+	     Matcher matcherState = pattern.matcher(objectAsMap.get("state").toString());
 	     if(matcherAddOne.matches() && matcherAddTwo.matches() && matcherCity.matches() && matcherState.matches())
 	     {
 	    	 return true;
 	     }
 	     else
 	     {
-	    	 map_result.put("userStatus", "Invalid Name Or City Or State");
+	    	 result_map.put("userStatus", "Invalid Name Or City Or State");
 	    	 return false;
 	     }
 	} 
 	
-	public void goForOrder(Map<String,Object> objectAsMap, Map<String,String> map_result)
+	public void goForUserCreate(Map<String,Object> objectAsMap, Map<String,String> result_map)
 	{
 		/*this is here because we don't need to trim the ph no. came from request, each time!! */						
-		TrimedPhNum = trimLastTenDigits(objectAsMap.get("form_user_phone_text").toString());
-		PreparedStatement psAddress = null;
-		ResultSet rsAddress = null;
+		TrimedPhNum = trimLastTenDigits(objectAsMap.get("phone").toString());
+		PreparedStatement ps_address = null;
+		ResultSet rs_address = null;
 		Connection con = null;
 		try
 		{
 			con = DbConnection.getConnection();						
-			psAddress = con.prepareStatement("select * from address;");
-			rsAddress = psAddress.executeQuery();
-			//System.out.println("rs_address is "+rs_address);
+			ps_address = con.prepareStatement("select * from address;");
+			rs_address = ps_address.executeQuery();			
 			
-			createOrder(rsAddress, objectAsMap, map_result);				
+			createUser(rs_address, objectAsMap, result_map);				
 		}	
 		catch(Exception e)
-		{
-			map_result.put("error_code", "502");
+		{						
+			result_map.put("error_code", "502");			
 		}
 		finally
 		{
-			DbUtils.closeUtil(rsAddress);
-			DbUtils.closeUtil(psAddress);
+			DbUtils.closeUtil(rs_address);
+			DbUtils.closeUtil(ps_address);
 			DbUtils.closeUtil(con);		
 		}
 	}	
-	public void createOrder(ResultSet rsAddress, Map<String,Object> objectAsMap, Map<String,String> map_result)throws Exception
+	public void createUser(ResultSet rs_address, Map<String,Object> objectAsMap, Map<String,String> result_map)throws Exception
 	{
-		////System.out.println("create Order called");
-		if(checkZipCode(rsAddress, objectAsMap))
+		//System.out.println("create Order called "+checkZipCode(rs_address, objectAsMap));
+		if(checkZipCode(rs_address, objectAsMap))
 		{
-			////System.out.println("ckeckZipCode ture");
-			rsAddress.beforeFirst();
-			if(checkAddress(rsAddress, objectAsMap))
+			//System.out.println("ckeckZipCode ture");
+			rs_address.beforeFirst();
+			if(checkAddress(rs_address, objectAsMap))
 			{
-				////System.out.println("ckeckAddress ture");
-				if(checkPhoneNum(objectAsMap,map_result))
+				System.out.println("ckeckAddress ture");
+				if(checkPhoneNum(objectAsMap,result_map))
 				{
 					//System.out.println("ckeckPhonNum ture");
 					//System.out.println("user already Exist");
-					map_result.put("userStatus", "userAlreadyExist");					
+					result_map.put("userStatus", "userAlreadyExist");					
 				}
 				else
 				{
 					//System.out.println("ckeckphoneNum false");
 					//System.out.println("user not Exist1");
-					map_result.put("userStatus", "userNotExist");
-					createUser(objectAsMap, map_result);							
+					result_map.put("userStatus", "userNotExist");
+					createUser(objectAsMap, result_map);							
 				}				
 				//createUser(addressId);							
 			}
 			else
 			{
-				//System.out.println("user not Exist2");
-				////System.out.println("ckeckAddress false");
-				map_result.put("userStatus", "userNotExist");
-				createUser(objectAsMap, map_result);								
+				System.out.println("user not Exist2");
+				System.out.println("ckeckAddress false");
+				result_map.put("userStatus", "userNotExist");
+				createUser(objectAsMap, result_map);								
 			}
 		}
 		else
 		{
-			////System.out.println("ckeckZipCode false");
+			//System.out.println("ckeckZipCode false");
 			//System.out.println("user not Exist3");
-			map_result.put("userStatus", "userNotExist");
-			createUser(objectAsMap, map_result);
+			result_map.put("userStatus", "userNotExist");
+			createUser(objectAsMap, result_map);
 		}
 		
 	}
 	
 	public boolean checkZipCode(ResultSet rs_address, Map<String,Object> objectAsMap) throws SQLException
-	{
+	{		
+		System.out.println(rs_address);
 		while(rs_address.next())
 		{			
-			if(objectAsMap.get("form_user_zip_text").equals(rs_address.getString("zip")))
+			System.out.println("came to while of zip");
+			System.out.println(objectAsMap.get("zip")+" "+rs_address.getString("zip"));
+			if(objectAsMap.get("zip").toString().equals(rs_address.getString("zip")))
 			{				
-				return true;	
+				System.out.println("came to equals");
+				return true;					
 			}			
 		}
 		return false;
@@ -337,9 +355,9 @@ public  class User  {
 	{
 		while(rsAddress.next())
 		{
-			////System.out.println("hello");
-			int lineOne = addressProbability(objectAsMap.get("form_user_add1_text").toString(), rsAddress.getString("address_line_one"));
-			int lineTwo = addressProbability(objectAsMap.get("form_user_add2_text").toString(), rsAddress.getString("address_line_two"));
+			//System.out.println("hello");
+			int lineOne = addressProbability(objectAsMap.get("addressLineOne").toString(), rsAddress.getString("address_line_one"));
+			int lineTwo = addressProbability(objectAsMap.get("addressLineTwo").toString(), rsAddress.getString("address_line_two"));
 			////System.out.println(lineOne+" "+lineTwo);
 			if(lineOne<=4 && lineTwo<=4)
 			{						
@@ -357,7 +375,7 @@ public  class User  {
 			return false;
 	}
 	
-	public boolean checkPhoneNum(Map<String,Object> objectAsMap, Map<String,String> map_result){		
+	public boolean checkPhoneNum(Map<String,Object> objectAsMap, Map<String,String> result_map){		
 		PreparedStatement psUser = null;
 		ResultSet rsUser = null;
 		Connection con = DbConnection.getConnection();
@@ -365,11 +383,9 @@ public  class User  {
 		try{
 			while(addIdIterator.hasNext()){
 				int addId = addIdIterator.next();
-				//System.out.println("addId Data came here 1 "+addId);			
-					//System.out.println("came to try 1");
+				//System.out.println("addId Data came here 1 "+addId);								
 					psUser = con.prepareStatement("select phone from user where id_address="+addId);
-					rsUser = psUser.executeQuery();
-					//System.out.println("came to under try");
+					rsUser = psUser.executeQuery();					
 					rsUser.next();	
 					//System.out.println("The trimed ph. no. is "+TrimedPhNum);
 					if(rsUser.getString("phone").endsWith(TrimedPhNum)){				
@@ -379,7 +395,8 @@ public  class User  {
 			}
 		}
 		catch(Exception e){
-			map_result.put("error_code", "502");
+			System.out.println("b");
+			result_map.put("error_code", "502");
 		}
 		finally{
 			DbUtils.closeUtil(rsUser);
@@ -458,7 +475,7 @@ public  class User  {
 	      return p[n];	 
 
 	}
-	public void createUser(Map<String,Object> objectAsMap, Map<String,String> map_result)
+	public void createUser(Map<String,Object> objectAsMap, Map<String,String> result_map)
 	{		
 //		Connection con = DbConnection.getConnection();
 //		
@@ -538,7 +555,7 @@ public  class User  {
 //		}
 //		catch(Exception e){
 //			e.printStackTrace();
-//			//map_result.put("error_code", "502");
+//			//result_map.put("error_code", "502");
 //		}
 //		finally{
 //			DbUtils.closeUtil(psUser);			
@@ -557,18 +574,36 @@ public  class User  {
         return null;
         
     }	
-
+    
     public String deleteUser(BeanUser bean_user) {
         
         return null;
         
     }	
-
-    public String getUser(Object identifier) {
+    
+    @GET
+	@Path("/get/all")
+	@Produces(MediaType.TEXT_PLAIN)
+    public String getUserAll() {
         
-        return null;
+        return "";
         
     }	
-
-
+    
+    @GET
+	@Path("/get/search/{textChars}")
+	@Produces(MediaType.TEXT_PLAIN)
+    public String getUserSearch(@PathParam("textChars") String textChar){
+    	
+    	return "";
+    	
+    }
+    
+    @GET
+	@Path("/get/id/{userId}")
+	@Produces(MediaType.TEXT_PLAIN)
+    public String getUserId(@PathParam("userId") String userId){
+    	
+    	return "";
+    }
  }
