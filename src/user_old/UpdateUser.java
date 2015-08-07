@@ -23,7 +23,7 @@ public class UpdateUser
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String updateUser(BeanUser BeanUser)
-	{			
+	{				
 		Map<String,String> map = new HashMap<String,String>();		
 		createUser(map,BeanUser);		
 		return "updation process done";
