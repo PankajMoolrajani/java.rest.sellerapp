@@ -578,9 +578,32 @@ public  class User  {
         return true;
         
     }	
-
+    
     public String updateUser(BeanUser bean_user) {
-        
+    	
+    	Map<String,Object> map_user_bean = new HashMap<String,Object>();
+		BeanInfo info = null;
+		try{
+			info = Introspector.getBeanInfo(bean_user.getClass());
+			for (PropertyDescriptor pd : info.getPropertyDescriptors()) {
+				Method reader = pd.getReadMethod();			
+			    if (reader != null){
+			    	map_user_bean.put(pd.getName(),reader.invoke(bean_user));
+			    }
+			}
+		}catch(IllegalArgumentException e){
+			e.printStackTrace();
+		}catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}catch (IntrospectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        System.out.println(map_user_bean);
         return null;
         
     }	
