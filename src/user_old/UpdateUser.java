@@ -15,13 +15,10 @@ import javax.ws.rs.core.MediaType;
 import db.DbConnection;
 import db.DbUtils;
 
-@Path("/user/update")
+
 public class UpdateUser 
 {
-	@POST
-	@Path("/form-data")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.TEXT_PLAIN)
+	
 	public String updateUser(BeanUser BeanUser)
 	{				
 		Map<String,String> map = new HashMap<String,String>();		

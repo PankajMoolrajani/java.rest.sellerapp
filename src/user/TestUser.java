@@ -25,10 +25,11 @@ public class TestUser
 	{
 		BeanUser bean_user = new BeanUser();
 		bean_user.setId(6);		
-		bean_user.setNameFirst("amit");
-		bean_user.setNameLast("sharma");
-		bean_user.setZip(20000);
-		bean_user.setIdUserCategory(3);
+		bean_user.setNameFirst("chinmay");
+		bean_user.setNameLast("messi");
+		bean_user.setZip(20010);
+		bean_user.setState("bihar");
+		bean_user.setIdUserCategory(1);
 						
 		Map<String,Object> map_user_bean = new HashMap<String,Object>();
 		BeanInfo info = null;
@@ -127,10 +128,8 @@ public class TestUser
  			}        
  			try{
  				con.setAutoCommit(false);
- 				parameters = parameters.substring(0, parameters.length()-1);
- 				System.out.println(parameters);
- 				String query = "UPDATE "+table+" SET "+parameters+" WHERE "+condition+"=?";
- 				System.out.println(query);
+ 				parameters = parameters.substring(0, parameters.length()-1); 				
+ 				String query = "UPDATE "+table+" SET "+parameters+" WHERE "+condition+"=?"; 				
  				PreparedStatement ps = con.prepareStatement(query);
  				ps.setInt(1, (Integer)map_user_bean.get("id"));
  				ps.executeUpdate();
@@ -151,10 +150,8 @@ public class TestUser
  			}        
  			try{
  				con.setAutoCommit(false);
- 				parameters = parameters.substring(0, parameters.length()-1);
- 				System.out.println(parameters);
- 				String query = "UPDATE "+table+" SET "+parameters+" WHERE "+condition+"=?";
- 				System.out.println(query);
+ 				parameters = parameters.substring(0, parameters.length()-1); 				
+ 				String query = "UPDATE "+table+" SET "+parameters+" WHERE "+condition+"=?"; 			
  				PreparedStatement ps = con.prepareStatement(query);
  				ps.setInt(1, (Integer)map_user_bean.get("id"));
  				ps.executeUpdate();

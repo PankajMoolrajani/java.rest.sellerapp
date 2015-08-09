@@ -10,10 +10,10 @@ public  class BeanUser  {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public BeanUser(int id, String nameUser, String emailid, String phone) {
+	public BeanUser(int id, String name_user, String emailid, String phone) {
 		super();
 		this.id = id;
-		name_user = nameUser;
+		this.name_user = name_user;
 		this.emailid = emailid;
 		this.phone = phone;
 	}
