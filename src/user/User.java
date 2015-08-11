@@ -761,11 +761,11 @@ public  class User  {
         
     }	
     
-    @GET
-	@Path("/get/search/{textChars}")
-	@Produces(MediaType.TEXT_PLAIN)
-    public String getUserSearch(@PathParam("textChars") String textChar){    	
-    	
+    @POST
+	@Path("/get/search")	
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)	
+    public String getUserSearch(BeanUser bean_user){    	    	
     	Connection con = DbConnection.getConnection();
 		PreparedStatement ps_user_search = null;
 		ResultSet rs_user_search = null;
@@ -780,12 +780,12 @@ public  class User  {
 			String query_user_search = "SELECT "+columns_user_search+" FROM "+table_user_search+" WHERE "+condition_user_search;
 			
 			ps_user_search = con.prepareStatement(query_user_search);
-			ps_user_search.setString(1, textChar+"%");
+			ps_user_search.setString(1, bean_user.getNameUser()+"%");
 			rs_user_search= ps_user_search.executeQuery();										
 			
 			while(rs_user_search.next())
 			{						
-				if(rs_user_search.getString(2)!=null && rs_user_search.getString(2).startsWith(textChar))
+				if(rs_user_search.getString(2)!=null && rs_user_search.getString(2).startsWith(bean_user.getNameUser()))
 				{							
 					list_user_search.add(new BeanUser(rs_user_search.getInt("id"),rs_user_search.getString("name_user"),rs_user_search.getString("emailid"),rs_user_search.getString("phone")));																			
 				}													
@@ -806,11 +806,12 @@ public  class User  {
 		return new Gson().toJson(map_user_search);		
     }
     
-    @GET
-	@Path("/get/id/{userId}")
+    @POST
+	@Path("/get/id")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
-    public String getUserId(@PathParam("userId") String userId){
-    	
+    public String getUserId(BeanUser bean_user_get){
+    	System.out.println("webservice called");
     	Connection con = DbConnection.getConnection();
 		
 		Map<String,Object> map_user_details = new HashMap <String,Object>();
@@ -831,7 +832,7 @@ public  class User  {
 			String table_user_table = "user";
 			String condition_user_table = "id=?";
 			ps_user_data = con.prepareStatement("SELECT "+columns_user_table+" FROM "+table_user_table+" WHERE "+condition_user_table);
-			ps_user_data.setInt(1, Integer.parseInt(userId));
+			ps_user_data.setInt(1, bean_user_get.getId());
 
 			rs_user_data = ps_user_data.executeQuery();
 			
