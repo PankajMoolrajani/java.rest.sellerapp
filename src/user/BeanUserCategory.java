@@ -14,6 +14,12 @@ public  class BeanUserCategory  {
 		// TODO Auto-generated constructor stub
 	}
 	
+	public BeanUserCategory(int id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
+
 	public BeanUserCategory(int id, String name, String description) {
 		super();
 		this.id = id;
