@@ -14,10 +14,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.gson.Gson;
-
 import db.DbConnection;
-import db.DbUtils;
 
 public class TestUser
 {

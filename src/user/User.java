@@ -33,7 +33,9 @@ import com.google.gson.Gson;
 
 import db.DbConnection;
 import db.DbUtils;
+
 import user.BeanUser;
+import user.BeanUserCategory;
 
 @Path("/user")
 public  class User  {
