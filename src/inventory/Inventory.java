@@ -4,9 +4,27 @@ package inventory;
 
 
 
-public  class GetInventory  {
+public  class Inventory  {
 
 	
+
+    public String createInventory(BeanInventory bean_inventory) {
+        
+        return null;
+        
+    }	
+
+    public String updateInventory(BeanInventory bean_inventory) {
+        
+        return null;
+        
+    }	
+
+    public String deleteInventory(BeanInventory bean_inventory) {
+        
+        return null;
+        
+    }	
 
     public String getInventory(Object identifier) {
         
