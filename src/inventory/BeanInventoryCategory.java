@@ -2,7 +2,7 @@ package inventory;
 
 public class BeanInventoryCategory {
 	String name, name_table;
-	int id, id_parent_category;
+	int id, id_parent_category, id_tax;
 	
 	public BeanInventoryCategory() {
 		super();
@@ -50,6 +50,13 @@ public class BeanInventoryCategory {
 		this.id_parent_category = id_parent_category;
 	}
 	
+	public int getIdTax(){
+		return id_tax;
+	}
+	
+	public void setIdTax(int id_tax){
+		this.id_tax = id_tax;
+	}
 	
 
 }
