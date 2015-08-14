@@ -17,7 +17,7 @@ import javax.ws.rs.core.MediaType;
 import inventory.BeanInventoryCategory;
 import db.DbConnection;
 
-@Path("/inventory")
+@Path("/inventory/category")
 public  class InventoryCategory  {
 
 	@POST
@@ -45,7 +45,7 @@ public  class InventoryCategory  {
 		
 		String table_name = "inventory_category";
 		String columns = "id_parent_category, name, name_table, id_tax";
-		String values = "?, ?, ?,?";
+		String values = "?, ?, ?, ?";
 		String query = "INSERT INTO "+table_name+"("+columns+")"+" VALUES "+"("+values+")";
 		System.out.println(query);
 		Connection con = DbConnection.getConnection();
@@ -58,9 +58,9 @@ public  class InventoryCategory  {
 			ps.setString(2, bean_inventory_category.getName());
 			ps.setString(3, bean_inventory_category.getNameTable());
 			ps.setInt(4, bean_inventory_category.getIdTax());
+			System.out.println(ps);
 			
 			int rows_affected =  ps.executeUpdate();
-			
 			if (rows_affected != 0){
 				
 				ResultSet rs = ps.getGeneratedKeys();
