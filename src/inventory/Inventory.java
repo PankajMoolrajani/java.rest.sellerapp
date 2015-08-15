@@ -45,7 +45,7 @@ public  class Inventory  {
 				map.put("id", id);
 				
 				map.put("response_code", 2000);
-				map.put("response_message", "success: create category");
+				map.put("response_message", "success: create inventory");
 				
 				return new Gson().toJson(map);
 				
@@ -55,7 +55,7 @@ public  class Inventory  {
 				map.put("id", 0);
 				
 				map.put("response_code", 4000);
-				map.put("response_message", "failure: create category");
+				map.put("response_message", "failure: create inventory");
 				
 				return new Gson().toJson(map);
 				
@@ -65,7 +65,7 @@ public  class Inventory  {
 		else {
 			
 			map.put("response_code", 4000);
-			map.put("response_message", "category already exists");
+			map.put("response_message", "inventory already exists");
 			
 			return new Gson().toJson(map);
 		}
@@ -82,69 +82,71 @@ public  class Inventory  {
 		//check price exists or not else insert into price
 		id_price = this.createPrice(bean_inventory);
 		
+		//check category - db insert without category raise exception or not
+		String table_name = "inventory";
+		String columns = "id_category, id_stock, id_price, sku, sku_replica, name, status_listing";
+		String values = "?, ?, ?, ?, ?, ?, ?";
+		String query = "INSERT INTO "+table_name+"("+columns+")"+" VALUES "+"("+values+")";
 		
-//		String table_name = "inventory";
-//		String columns = "id_parent_category, name, name_table, id_tax";
-//		String values = "?, ?, ?, ?";
-//		String query = "INSERT INTO "+table_name+"("+columns+")"+" VALUES "+"("+values+")";
-//		
-//		Connection con = DbConnection.getConnection();
-//		
-//		try {
-//			
-//			PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-//			ps.setInt(1, bean_inventory_category.getIdParentCategory());
-//			ps.setString(2, bean_inventory_category.getName());
-//			ps.setString(3, bean_inventory_category.getNameTable());
-//			ps.setInt(4, bean_inventory_category.getIdTax());
-////			
-//			int rows_affected =  ps.executeUpdate();
-//			
-//			if (rows_affected != 0){
-//				
-//				ResultSet rs = ps.getGeneratedKeys();
-//				
-//				if (rs.next()){
-//				
-//					id = rs.getInt(1);
-//					
-//				}    			
-//			}
-//				
-//		}
-//		catch (SQLException e){
-//			e.printStackTrace();
-//		}
+		Connection con = DbConnection.getConnection();
+		
+		try {
+			
+			PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			ps.setInt(1, bean_inventory.getIdCategory());
+			ps.setInt(2, id_stock);
+			ps.setInt(3, id_price);
+			ps.setString(4, bean_inventory.getSku());
+			ps.setString(5, bean_inventory.getSkuReplica());
+			ps.setString(6, bean_inventory.getName());
+			ps.setString(7, bean_inventory.getStatusListing());
+		
+			int rows_affected =  ps.executeUpdate();
+			
+			if (rows_affected != 0){
+				
+				ResultSet rs = ps.getGeneratedKeys();
+				
+				if (rs.next()){
+				
+					id = rs.getInt(1);
+					
+				}    			
+			}
+				
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+		}
 		return id; 
 	}
 	
 	
 	Boolean checkExistence(BeanInventory bean_inventory){
 		
-//		String table_name = "inventory";
-//		String column = "id";
-//		String condition = "id_parent_category=? and name=?";
-//		String query = "SELECT "+column+" FROM "+table_name+" WHERE "+condition;
-//		
-//		Connection con = DbConnection.getConnection();
-//		
-//		try {
-//			
-//			PreparedStatement ps = con.prepareStatement(query);
-//			//ps.setInt(1, bean_inventory.getIdParentCategory());
-//			//ps.setString(2, bean_inventory.getName());
-//			
-//			ResultSet rs = ps.executeQuery();
-//			
-//			if (rs.next()){
-//				return true;
-//			}
-//			
-//		} 
-//		catch (SQLException e){
-//			e.printStackTrace();
-//		}
+		String table_name = "inventory";
+		String column = "id";
+		String condition = "name=? OR sku=?";
+		String query = "SELECT "+column+" FROM "+table_name+" WHERE "+condition;
 		
+		Connection con = DbConnection.getConnection();
+		
+		try {
+			
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setString(1, bean_inventory.getName());
+			ps.setString(2, bean_inventory.getSku());
+			
+			ResultSet rs = ps.executeQuery();
+			
+			if (rs.next()){
+				return true;
+			}
+			
+		} 
+		catch (SQLException e){
+			e.printStackTrace();
+		}
 		return false;
 	}
 	
