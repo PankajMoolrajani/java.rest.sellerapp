@@ -221,9 +221,9 @@ public  class InventoryCategory  {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
     
-    public String getId() {
+    public String getId(BeanInventoryCategory bean_inventory_category) {
     	
-    	int identifier = 5;
+    	int identifier = bean_inventory_category.getId();
     	Map <String,Object> map = new HashMap<String,Object>();
     	    	
     	String table_name = "inventory_category";
