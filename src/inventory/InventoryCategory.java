@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -155,39 +156,130 @@ public  class InventoryCategory  {
 
     
     @POST
-	@Path("/get")
+	@Path("/get/all")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
     
-    public String getInventory(Object identifier) {
+    public String getAll() {
+        
+    	Map <String,Object> map = new HashMap<String,Object>();
     	
-    	//convert Object identifier to map - amit
+    	ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
     	
-    	System.out.println(identifier);
-    	System.out.println(identifier.getClass().getName());
-        return null;
+    	String table_name = "inventory_category";
+		String columns = "id, id_parent_category, name, name_table, id_tax";
+		String query = "SELECT "+columns+" FROM "+table_name;
+		
+		
+		Connection con = DbConnection.getConnection();
+		
+		try {
+			
+			PreparedStatement ps = con.prepareStatement(query);
+
+			ResultSet rs =  ps.executeQuery();
+
+			if (rs.first()){
+				
+				while (rs.next()){
+					
+					Map <String,Object> map_rs = new HashMap<String,Object>();
+					
+					map_rs.put("id", rs.getInt("id"));
+					map_rs.put("id_parent_category", rs.getInt("id_parent_category"));
+					map_rs.put("id_tax", rs.getInt("id_tax")); 
+					map_rs.put("name", rs.getString("name"));
+					map_rs.put("name_table", rs.getString("name_table"));
+					
+					list.add(map_rs);
+					
+				}
+				
+				map.put("data", list);
+				map.put("response_code", 2000);
+				map.put("response_message", "success: get inventory - id");
+				
+			} 			
+			else {
+				
+				map.put("response_code", 4000);
+				map.put("response_message", "failure: get inventory - all");
+				
+			}
+				
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+		}
+		
+		return new Gson().toJson(map);
         
     }	
+    
+    @POST
+	@Path("/get/id")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
+    
+    public String getId() {
+    	
+    	int identifier = 5;
+    	Map <String,Object> map = new HashMap<String,Object>();
+    	    	
+    	String table_name = "inventory_category";
+		String columns = "id_parent_category, name, name_table, id_tax";
+		String condition = "id = ?";
+		String query = "SELECT "+columns+" FROM "+table_name+" WHERE "+condition;
+		
+		
+		Connection con = DbConnection.getConnection();
+		
+		try {
+			
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setInt(1, identifier);
 
-    public Object recognizeIdentifier(Object identifier) {
-        
-        return null;
+			ResultSet rs =  ps.executeQuery();
+			
+			if (rs.next()){
+					
+				Map <String,Object> map_rs = new HashMap<String,Object>();
+				
+				map_rs.put("id", identifier);
+				map_rs.put("id_parent_category", rs.getInt("id_parent_category"));
+				map_rs.put("id_tax", rs.getInt("id_tax")); 
+				map_rs.put("name", rs.getString("name"));
+				map_rs.put("name_table", rs.getString("name_table"));
+
+				map.put("data", map_rs);
+				map.put("response_code", 2000);
+				map.put("response_message", "success: get inventory - id");
+				
+			}
+			    			
+			else {
+				
+				map.put("response_code", 4000);
+				map.put("response_message", "failure: get inventory - id");
+				
+			}
+		
+				
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+		}
+		
+		return new Gson().toJson(map);
         
     }	
-
-    public String all(String identifier) {
-        
-        return null;
-        
-    }	
-
-    public String id(int identifier) {
-        
-        return null;
-        
-    }	
-
-    public String search(String identifier) {
+    
+    @POST
+	@Path("/get/search")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
+    
+    public String getSearch(String identifier) {
         
         return null;
         
