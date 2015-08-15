@@ -74,7 +74,7 @@ public  class Inventory  {
 	
 	int create(BeanInventory bean_inventory){
 		
-		int id, id_stock = 0;
+		int id = 0, id_stock = 0;
 		
 		//check stock exists or not else insert stock
 		int available = bean_inventory.getAvailable();

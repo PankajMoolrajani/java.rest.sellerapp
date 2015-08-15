@@ -180,7 +180,8 @@ public  class InventoryCategory  {
 			ResultSet rs =  ps.executeQuery();
 
 			if (rs.first()){
-				
+				//if we are using rs.first() so we need rs.beforeFirst() to put cursore before first
+				rs.beforeFirst();
 				while (rs.next()){
 					
 					Map <String,Object> map_rs = new HashMap<String,Object>();
