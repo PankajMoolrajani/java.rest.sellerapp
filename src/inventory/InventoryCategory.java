@@ -293,14 +293,14 @@ public  class InventoryCategory  {
 
 				map.put("data", map_rs);
 				map.put("response_code", 2000);
-				map.put("response_message", "success: get inventory - id");
+				map.put("response_message", "success: get inventory category - id");
 				
 			}
 			    			
 			else {
 				
 				map.put("response_code", 4000);
-				map.put("response_message", "failure: get inventory - id");
+				map.put("response_message", "failure: get inventory category - id");
 				
 			}
 		

@@ -7,10 +7,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -289,7 +291,6 @@ public  class Inventory  {
 				ps.setInt(1, price_sell);
 				ps.setInt(2, price_mrp);
 				
-				
 				int rows_affected =  ps.executeUpdate();
 				
 				if (rows_affected != 0){
@@ -444,35 +445,131 @@ public  class Inventory  {
         
     }	
 
-    public String getInventory(Object identifier) {
-        
-        return null;
+    @GET
+	@Path("/get/all")
+	@Produces(MediaType.TEXT_PLAIN)
+    
+    public String getAll() {
+
+    	Map <String,Object> map = new HashMap<String,Object>();
+    	
+    	ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+    	
+    	String table_name = "inventory i, price p, stock s";
+		String columns = "i.id, i.sku, i.name, i.status_listing, s.available, s.outgoing, s.incoming, p.price_mrp, p.price_sell";
+		String condition = "i.id_price = p.id and i.id_stock = s.id";
+		String query = "SELECT "+columns+" FROM "+table_name+" WHERE "+condition;
+		
+		
+		Connection con = DbConnection.getConnection();
+		
+		try {
+			
+			PreparedStatement ps = con.prepareStatement(query);
+
+			ResultSet rs =  ps.executeQuery();
+
+			if (rs.first()){
+				
+				while (rs.next()){
+					
+					Map <String,Object> map_rs = new HashMap<String,Object>();
+					
+					map_rs.put("id", rs.getInt("id"));
+					map_rs.put("sku", rs.getString("sku"));
+					map_rs.put("name", rs.getString("name"));
+					map_rs.put("status_listing", rs.getString("status_listing"));
+					map_rs.put("available", rs.getInt("available"));
+					map_rs.put("outgoing", rs.getInt("outgoing"));
+					map_rs.put("incoming", rs.getInt("incoming"));
+					map_rs.put("price_sell", rs.getInt("price_sell"));
+					map_rs.put("price_mrp", rs.getInt("price_mrp"));
+					
+					list.add(map_rs);
+					
+				}
+				
+				map.put("data", list);
+				map.put("response_code", 2000);
+				map.put("response_message", "success: get inventory - id");
+				
+			} 			
+			else {
+				
+				map.put("response_code", 4000);
+				map.put("response_message", "failure: get inventory - all");
+				
+			}
+				
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+		}
+		
+		return new Gson().toJson(map);
         
     }	
 
-    public Object recognizeIdentifier(Object identifier) {
+    
+    @POST
+	@Path("/get/id")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
+    
+    public String getId(BeanInventory bean_inventory) {
         
-        return null;
-        
+    	int identifier = bean_inventory.getId();
+    	Map <String,Object> map = new HashMap<String,Object>();
+    	    	
+    	String table_name = "inventory i, price p, stock s";
+		String columns = "i.id, i.sku, i.name, i.status_listing, s.available, s.outgoing, s.incoming, p.price_mrp, p.price_sell";
+		String condition = "i.id = ? and i.id_price = p.id and i.id_stock = s.id";
+		String query = "SELECT "+columns+" FROM "+table_name+" WHERE "+condition;
+		
+		Connection con = DbConnection.getConnection();
+		
+		try {
+			
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setInt(1, identifier);
+
+			ResultSet rs =  ps.executeQuery();
+			
+			if (rs.next()){
+					
+				Map <String,Object> map_rs = new HashMap<String,Object>();
+				
+				map_rs.put("id", identifier);
+				map_rs.put("sku", rs.getString("sku"));
+				map_rs.put("name", rs.getString("name"));
+				map_rs.put("status_listing", rs.getString("status_listing"));
+				map_rs.put("available", rs.getInt("available"));
+				map_rs.put("outgoing", rs.getInt("outgoing"));
+				map_rs.put("incoming", rs.getInt("incoming"));
+				map_rs.put("price_sell", rs.getInt("price_sell"));
+				map_rs.put("price_mrp", rs.getInt("price_mrp"));
+
+				map.put("data", map_rs);
+				map.put("response_code", 2000);
+				map.put("response_message", "success: get category - id");
+				
+			}
+			    			
+			else {
+				
+				map.put("response_code", 4000);
+				map.put("response_message", "failure: get category - id");
+				
+			}
+				
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+		}
+		
+		return new Gson().toJson(map);
     }	
 
-    public String all(String identifier) {
-        
-        return null;
-        
-    }	
-
-    public String id(int identifier) {
-        
-        return null;
-        
-    }	
-
-    public String search(String identifier) {
-        
-        return null;
-        
-    }	
 
 
  }
