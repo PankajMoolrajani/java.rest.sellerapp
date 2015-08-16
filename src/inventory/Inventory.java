@@ -17,6 +17,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.google.gson.Gson;
+import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 
 import db.DbConnection;
 
@@ -36,7 +37,7 @@ public  class Inventory  {
 		
 		int id = 0;
 		
-		if (checkExistence(bean_inventory) == false){
+		if (checkExistenceInventory(bean_inventory) == false){
 			
 			id = this.createInventory(bean_inventory);
 			
@@ -74,55 +75,62 @@ public  class Inventory  {
 	
 	int createInventory(BeanInventory bean_inventory){
 		
-		int id = 0, id_stock = 0, id_price = 0;
+		int id = 0, id_stock = 0, id_price = 0, id_category = 0;
 		
-		//check stock exists or not else insert stock
 		id_stock = this.createStock(bean_inventory);
 
-		//check price exists or not else insert into price
 		id_price = this.createPrice(bean_inventory);
 		
-		//check category - db insert without category raise exception or not
-		String table_name = "inventory";
-		String columns = "id_category, id_stock, id_price, sku, sku_replica, name, status_listing";
-		String values = "?, ?, ?, ?, ?, ?, ?";
-		String query = "INSERT INTO "+table_name+"("+columns+")"+" VALUES "+"("+values+")";
+		Map<String, Object> map_check_existence_category = new HashMap<String, Object>();
+		map_check_existence_category = this.checkExistenceCategory(bean_inventory.getIdCategory());
 		
-		Connection con = DbConnection.getConnection();
-		
-		try {
+		if ((Boolean) map_check_existence_category.get("boolean")){
 			
-			PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-			ps.setInt(1, bean_inventory.getIdCategory());
-			ps.setInt(2, id_stock);
-			ps.setInt(3, id_price);
-			ps.setString(4, bean_inventory.getSku());
-			ps.setString(5, bean_inventory.getSkuReplica());
-			ps.setString(6, bean_inventory.getName());
-			ps.setString(7, bean_inventory.getStatusListing());
-		
-			int rows_affected =  ps.executeUpdate();
+			id_category = (Integer) map_check_existence_category.get("id_category");
 			
-			if (rows_affected != 0){
+			String table_name = "inventory";
+			String columns = "id_category, id_stock, id_price, sku, sku_replica, name, status_listing";
+			String values = "?, ?, ?, ?, ?, ?, ?";
+			String query = "INSERT INTO "+table_name+"("+columns+")"+" VALUES "+"("+values+")";
+			
+			Connection con = DbConnection.getConnection();
+			
+			try {
 				
-				ResultSet rs = ps.getGeneratedKeys();
+				PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+				ps.setInt(1, id_category);
+				ps.setInt(2, id_stock);
+				ps.setInt(3, id_price);
+				ps.setString(4, bean_inventory.getSku());
+				ps.setString(5, bean_inventory.getSkuReplica());
+				ps.setString(6, bean_inventory.getName());
+				ps.setString(7, bean_inventory.getStatusListing());
+			
+				int rows_affected =  ps.executeUpdate();
 				
-				if (rs.next()){
-				
-					id = rs.getInt(1);
+				if (rows_affected != 0){
 					
-				}    			
+					ResultSet rs = ps.getGeneratedKeys();
+					
+					if (rs.next()){
+					
+						id = rs.getInt(1);
+						
+					}    			
+				}
+					
 			}
-				
+			catch (SQLException e){
+				e.printStackTrace();
+			}
+			
 		}
-		catch (SQLException e){
-			e.printStackTrace();
-		}
+		
 		return id; 
 	}
 	
 	
-	Boolean checkExistence(BeanInventory bean_inventory){
+	Boolean checkExistenceInventory(BeanInventory bean_inventory){
 		
 		String table_name = "inventory";
 		String column = "id";
@@ -346,15 +354,93 @@ public  class Inventory  {
 	}
 	
 	
+	Map<String, Object> checkExistenceCategory(int id_category){
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		String table_name = "inventory_category";
+		String column = "id";
+		String condition = "id=?";
+		String query = "SELECT "+column+" FROM "+table_name+" WHERE "+condition;
+		
+		Connection con = DbConnection.getConnection();
+		
+		try {
+			
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setInt(1, id_category);
+
+			ResultSet rs = ps.executeQuery();
+			
+			if (rs.next()){
+				
+				map.put("boolean", true);
+				map.put("id_category", rs.getInt("id"));
+				
+			}
+			else {
+				
+				map.put("boolean", false);
+				map.put("id_category", 0);
+				
+			}
+		} 
+		catch (SQLException e){
+			e.printStackTrace();
+		}
+
+		return map;
+		
+	}
+	
+	
     public String updateInventory(BeanInventory bean_inventory) {
         
         return null;
         
     }	
 
+    
+    @POST
+	@Path("/delete")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
+    
     public String deleteInventory(BeanInventory bean_inventory) {
         
-        return null;
+    	Map <String,Object> map = new HashMap<String,Object>();
+    	
+    	String table_name = "inventory";
+    	String condition = "id=?";
+    	String query = "DELETE FROM "+table_name+" WHERE "+condition;
+    	
+    	Connection con = db.DbConnection.getConnection();
+    	
+    	try {
+    		
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setInt(1, bean_inventory.getId());
+			
+			if (ps.executeUpdate() == 1){
+				map.put("response_code", 2000);
+    			map.put("response_message", "success: inventory delete");
+			}
+			else {
+				map.put("response_code", 4000);
+    			map.put("response_message", "failure: inventory delete");
+			}
+			
+		}
+    	catch (Exception e) {
+    		
+    		if (e instanceof MySQLIntegrityConstraintViolationException){
+    			map.put("response_code", 4000);
+    			map.put("response_message", "failure: inventory delete - constraint integrity exception");
+    		}
+    		
+		}
+   
+    	return new Gson().toJson(map);
         
     }	
 
