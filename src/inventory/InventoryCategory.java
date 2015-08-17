@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.google.gson.Gson;
+import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 
 import inventory.BeanInventoryCategory;
 import db.DbConnection;
@@ -147,10 +149,48 @@ public  class InventoryCategory  {
         return null;
         
     }	
+    
+    
+    @POST
+	@Path("/delete")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
 
     public String deleteInventoryCategory(BeanInventoryCategory bean_inventory_category) {
         
-        return null;
+    	Map <String,Object> map = new HashMap<String,Object>();
+    	
+    	String table_name = "inventory_category";
+    	String condition = "id=?";
+    	String query = "DELETE FROM "+table_name+" WHERE "+condition;
+    	
+    	Connection con = db.DbConnection.getConnection();
+    	
+    	try {
+    		
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setInt(1, bean_inventory_category.getId());
+			
+			if (ps.executeUpdate() == 1){
+				map.put("response_code", 2000);
+    			map.put("response_message", "success: inventory category delete");
+			}
+			else {
+				map.put("response_code", 4000);
+    			map.put("response_message", "failure: inventory category delete");
+			}
+			
+		}
+    	catch (Exception e) {
+    		
+    		if (e instanceof MySQLIntegrityConstraintViolationException){
+    			map.put("response_code", 4000);
+    			map.put("response_message", "failure: inventory category delete - constraint integrity exception");
+    		}
+    		
+		}
+   
+    	return new Gson().toJson(map);
         
     }	
 
@@ -222,9 +262,9 @@ public  class InventoryCategory  {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
     
-    public String getId() {
+    public String getId(BeanInventoryCategory bean_inventory_category) {
     	
-    	int identifier = 5;
+    	int identifier = bean_inventory_category.getId();
     	Map <String,Object> map = new HashMap<String,Object>();
     	    	
     	String table_name = "inventory_category";
@@ -254,14 +294,14 @@ public  class InventoryCategory  {
 
 				map.put("data", map_rs);
 				map.put("response_code", 2000);
-				map.put("response_message", "success: get inventory - id");
+				map.put("response_message", "success: get inventory category - id");
 				
 			}
 			    			
 			else {
 				
 				map.put("response_code", 4000);
-				map.put("response_message", "failure: get inventory - id");
+				map.put("response_message", "failure: get inventory category - id");
 				
 			}
 		
