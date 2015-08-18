@@ -1,41 +1,40 @@
 package order;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import order.BeanOrderLine;
 public class BeanOrder {
 	
 	//table order
-	int id, id_user, id_marketplace, amount_total_taxable, amount_total_untaxable, amount_total_tax, amount_total_shipping, amount_total;
+	int id, id_user, id_marketplace, id_inventory_marketplace, amount_total_taxable, amount_total_untaxable, amount_total_tax, amount_total_shipping, amount_total;
 	String marketplace_orderid;
 	//table order_line
-	ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-	int id_order_line, id_order, id_inventory, id_inventory_marketplace, marektplace_suborder_id, amount_taxable, amount_untaxable, amount_tax, amount_shipping;
+	
+	ArrayList<BeanOrderLine> list;
 
 	public BeanOrder() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public BeanOrder(int id, int id_user, int id_marketplace,
-			String marketplace_orderid, int amount_total_taxable,
-			int amount_total_untaxable, int amount_total_tax, 
-			int amount_total_shipping, int amount_total, ArrayList<Map<String, Object>> list) {
+	public BeanOrder(int id, int id_user, int id_marketplace, int id_inventory_marketplace,
+			int amount_total_taxable, int amount_total_untaxable,
+			int amount_total_tax, int amount_total_shipping, int amount_total,
+			String marketplace_orderid, ArrayList<BeanOrderLine> bean_order_line) {
 		super();
-		System.out.println("inside constructor");
 		this.id = id;
 		this.id_user = id_user;
 		this.id_marketplace = id_marketplace;
-		this.marketplace_orderid = marketplace_orderid;
+		this.id_inventory_marketplace = id_inventory_marketplace;
 		this.amount_total_taxable = amount_total_taxable;
 		this.amount_total_untaxable = amount_total_untaxable;
 		this.amount_total_tax = amount_total_tax;
 		this.amount_total_shipping = amount_total_shipping;
 		this.amount_total = amount_total;
-		this.list = list;
-		
-		System.out.println(list);
-		
+		this.marketplace_orderid = marketplace_orderid;
+		this.list = bean_order_line;
 	}
 
 	public int getId() {
@@ -61,13 +60,13 @@ public class BeanOrder {
 	public void setIdMarketplace(int id_marketplace) {
 		this.id_marketplace = id_marketplace;
 	}
-
-	public String getMarketplaceOrderid() {
-		return marketplace_orderid;
+	
+	public int getIdInventoryMarketplace() {
+		return id_inventory_marketplace;
 	}
 
-	public void setMarketplaceOrderid(String marketplace_orderid) {
-		this.marketplace_orderid = marketplace_orderid;
+	public void setIdInventoryMarketplace(int id_inventory_marketplace) {
+		this.id_inventory_marketplace = id_inventory_marketplace;
 	}
 
 	public int getAmountTotalTaxable() {
@@ -94,14 +93,14 @@ public class BeanOrder {
 		this.amount_total_tax = amount_total_tax;
 	}
 
-	public int getAmountTotalShipping(){
+	public int getAmountTotalShipping() {
 		return amount_total_shipping;
 	}
-	
-	public void setAmountTotalShipping(int amount_total_shipping){
+
+	public void setAmountTotalShipping(int amount_total_shipping) {
 		this.amount_total_shipping = amount_total_shipping;
 	}
-	
+
 	public int getAmountTotal() {
 		return amount_total;
 	}
@@ -110,4 +109,20 @@ public class BeanOrder {
 		this.amount_total = amount_total;
 	}
 
+	public String getMarketplaceOrderid() {
+		return marketplace_orderid;
+	}
+
+	public void setMarketplaceOrderid(String marketplace_orderid) {
+		this.marketplace_orderid = marketplace_orderid;
+	}
+
+	public ArrayList<BeanOrderLine> getBeanOrderLine() {
+		return list;
+	}
+
+	public void setBeanOrderLine(ArrayList<BeanOrderLine> bean_order_line) {
+		this.list = bean_order_line;
+	}
+	
 }
