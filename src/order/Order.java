@@ -31,11 +31,11 @@ public class Order {
 	@Produces(MediaType.TEXT_PLAIN)
 	
 	public String create(BeanOrder bean_order){
-		System.out.println("inside create");
-		ArrayList<BeanOrderLine> list = bean_order.getBeanOrderLine();
-		for (BeanOrderLine ol: list){
-			System.out.println(ol.id);
-		}
+//		System.out.println("inside create");
+//		ArrayList<BeanOrderLine> list = bean_order.getBeanOrderLine();
+//		for (BeanOrderLine ol: list){
+//			System.out.println(ol.id);
+//		}
 		
 		Map <String,Object> map = new HashMap<String,Object>();
 		
@@ -46,13 +46,16 @@ public class Order {
 			id = this.createOrder(bean_order);
 			
 			if (id != 0){
-	
+				
+				this.createOrderLine(id, bean_order.getBeanOrderLine());
 				map.put("id", id);
 				
 				map.put("response_code", 2000);
 				map.put("response_message", "success: create order");
 				
 				return new Gson().toJson(map);
+				
+				
 				
 			}
 			else {
@@ -89,7 +92,6 @@ public class Order {
 			//String columns = "id_order, id_inventory, id_inventory_marketplace, marketplace_suborder_id, amount_taxable, amount_untaxable, amount_tax, amount_shipping";
 			String values = "?, ?, ?, ?, ?, ?, ?, ?";
 			String query = "INSERT INTO "+table_name+"("+columns+")"+" VALUES "+"("+values+")";
-			System.out.println(query);
 			
 			Connection con = DbConnection.getConnection();
 			
@@ -125,6 +127,20 @@ public class Order {
 		}
 		
 		return id; 
+	}
+	
+	ArrayList<Integer> createOrderLine(int id_order, ArrayList<BeanOrderLine> list_bean_order_line){
+		System.out.println("Print array list");
+
+		for (BeanOrderLine ol: list_bean_order_line){
+			System.out.println(ol.id_order);
+			System.out.println(ol.id_inventory);
+			System.out.println(ol.quantity);
+	}
+		
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		list.add(1);
+		return list;
 	}
 	
 	

@@ -6,7 +6,7 @@ import java.util.Map;
 public class BeanOrderLine {
 
 	int id, id_order, id_inventory;
-	float amount_taxable, amount_untaxable, amount_tax;
+	float amount_taxable, amount_untaxable, amount_tax, quantity;
 	String marektplace_suborderid;
 	public BeanOrderLine() {
 		super();
@@ -14,7 +14,7 @@ public class BeanOrderLine {
 	}
 	public BeanOrderLine(int id, int id_order, int id_inventory,
 			float amount_taxable, float amount_untaxable, float amount_tax,
-			String marektplace_suborderid) {
+			float quantity, String marektplace_suborderid) {
 		super();
 		this.id = id;
 		this.id_order = id_order;
@@ -22,6 +22,7 @@ public class BeanOrderLine {
 		this.amount_taxable = amount_taxable;
 		this.amount_untaxable = amount_untaxable;
 		this.amount_tax = amount_tax;
+		this.quantity = quantity;
 		this.marektplace_suborderid = marektplace_suborderid;
 	}
 	public int getId() {
@@ -59,6 +60,12 @@ public class BeanOrderLine {
 	}
 	public void setAmountTax(float amount_tax) {
 		this.amount_tax = amount_tax;
+	}
+	public float getQuantity(){
+		return quantity;
+	}
+	public void setQuantity(float quantity){
+		this.quantity = quantity;
 	}
 	public String getMarektplaceSuborderid() {
 		return marektplace_suborderid;
