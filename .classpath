@@ -36,5 +36,6 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="con" path="melibrary.com.genuitec.eclipse.ws.MYECLIPSE_JERSEY_JSON"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
 </classpath>
