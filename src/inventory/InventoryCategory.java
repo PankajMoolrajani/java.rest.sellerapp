@@ -1,5 +1,3 @@
-
-
 package inventory;
 
 import java.io.StringWriter;
