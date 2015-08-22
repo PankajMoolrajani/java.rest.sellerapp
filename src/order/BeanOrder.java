@@ -8,7 +8,7 @@ import order.BeanOrderLine;
 public class BeanOrder {
 	
 	//table order
-	int id, id_user, id_marketplace, id_inventory_marketplace, amount_total_taxable, amount_total_untaxable, amount_total_tax, amount_total_shipping, amount_total;
+	int id, id_user, id_marketplace, amount_total_taxable, amount_total_untaxable, amount_total_tax, amount_total_shipping, amount_total;
 	String marketplace_orderid;
 	//table order_line
 	
@@ -27,7 +27,6 @@ public class BeanOrder {
 		this.id = id;
 		this.id_user = id_user;
 		this.id_marketplace = id_marketplace;
-		this.id_inventory_marketplace = id_inventory_marketplace;
 		this.amount_total_taxable = amount_total_taxable;
 		this.amount_total_untaxable = amount_total_untaxable;
 		this.amount_total_tax = amount_total_tax;
@@ -61,14 +60,6 @@ public class BeanOrder {
 		this.id_marketplace = id_marketplace;
 	}
 	
-	public int getIdInventoryMarketplace() {
-		return id_inventory_marketplace;
-	}
-
-	public void setIdInventoryMarketplace(int id_inventory_marketplace) {
-		this.id_inventory_marketplace = id_inventory_marketplace;
-	}
-
 	public int getAmountTotalTaxable() {
 		return amount_total_taxable;
 	}

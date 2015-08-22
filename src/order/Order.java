@@ -31,11 +31,14 @@ public class Order {
 	@Produces(MediaType.TEXT_PLAIN)
 	
 	public String create(BeanOrder bean_order){
-//		System.out.println("inside create");
-//		ArrayList<BeanOrderLine> list = bean_order.getBeanOrderLine();
-//		for (BeanOrderLine ol: list){
-//			System.out.println(ol.id);
-//		}
+		
+		Connection con = DbConnection.getConnection();
+		try {
+			con.setAutoCommit(false);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		Map <String,Object> map = new HashMap<String,Object>();
 		
@@ -43,19 +46,30 @@ public class Order {
 		
 		if (checkExistenceOrder(bean_order) == false){
 			
-			id = this.createOrder(bean_order);
+			id = this.createOrder(con, bean_order);
 			
 			if (id != 0){
 				
-				this.createOrderLine(id, bean_order.getBeanOrderLine());
-				map.put("id", id);
+				ArrayList<Integer> list = this.createOrderLine(con, id, bean_order.getBeanOrderLine());
+				if (list != null){
+					
+					map.put("id", id);
+					
+					map.put("response_code", 2000);
+					map.put("response_message", "success: create order");
+				}
+				else {
+					
+					map.put("id", 0);
+					
+					map.put("response_code", 4000);
+					map.put("response_message", "failure: create order line");
+					
+					return new Gson().toJson(map);
+				}
 				
-				map.put("response_code", 2000);
-				map.put("response_message", "success: create order");
 				
 				return new Gson().toJson(map);
-				
-				
 				
 			}
 			else {
@@ -79,21 +93,18 @@ public class Order {
 		}
 	}
 	
-	int createOrder(BeanOrder bean_order){
+	int createOrder(Connection con, BeanOrder bean_order){
 		
 		int id = 0, id_user = 0, id_marketplace, id_inventory_marketplace, id_inventory;
 
 		if (this.checkExistenceUser(bean_order.getIdUser())
-		 && this.checkExistenceMarketplace(bean_order.getIdMarketplace()) 
-		 && this.checkExistenceInventoryMarketplace(bean_order.getIdInventoryMarketplace())) {
+		 && this.checkExistenceMarketplace(bean_order.getIdMarketplace())) {
 
 			String table_name = "orders";
 			String columns = "id_user, id_marketplace, marketplace_orderid, amount_total_taxable, amount_total_untaxable, amount_total_tax, amount_total_shipping, amount_total";
-			//String columns = "id_order, id_inventory, id_inventory_marketplace, marketplace_suborder_id, amount_taxable, amount_untaxable, amount_tax, amount_shipping";
 			String values = "?, ?, ?, ?, ?, ?, ?, ?";
 			String query = "INSERT INTO "+table_name+"("+columns+")"+" VALUES "+"("+values+")";
 			
-			Connection con = DbConnection.getConnection();
 			
 			try {
 				
@@ -129,17 +140,61 @@ public class Order {
 		return id; 
 	}
 	
-	ArrayList<Integer> createOrderLine(int id_order, ArrayList<BeanOrderLine> list_bean_order_line){
+	ArrayList<Integer> createOrderLine(Connection con, int id_order, ArrayList<BeanOrderLine> list_bean_order_line){
 		System.out.println("Print array list");
-
-		for (BeanOrderLine ol: list_bean_order_line){
-			System.out.println(ol.id_order);
-			System.out.println(ol.id_inventory);
-			System.out.println(ol.quantity);
-	}
 		
 		ArrayList<Integer> list = new ArrayList<Integer>();
-		list.add(1);
+		
+		for (BeanOrderLine ol: list_bean_order_line){
+			if (this.checkExistenceInventoryMarketplace((ol.id_inventory_marketplace))){
+
+				String table_name = "order_line";
+				String columns = "id_order, id_inventory_marketplace, marketplace_suborderid, amount_taxable, amount_untaxable, amount_tax, amount_shipping, quantity";
+				String values = "?, ?, ?, ?, ?, ?, ?, ?";
+				String query = "INSERT INTO "+table_name+"("+columns+")"+" VALUES "+"("+values+")";
+								
+				try {
+					
+					PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+					ps.setInt(1, id_order);
+					ps.setInt(2, ol.id_inventory_marketplace);
+					ps.setString(3, ol.marketplace_suborderid);
+					ps.setDouble(4, ol.amount_taxable);
+					ps.setDouble(5, ol.amount_untaxable);
+					ps.setDouble(6, ol.amount_tax);
+					ps.setDouble(7, ol.amount_shipping);
+					ps.setInt(8,  ol.getQuantity());
+					
+					
+					int rows_affected =  ps.executeUpdate();
+					
+					if (rows_affected != 0){
+						
+						ResultSet rs = ps.getGeneratedKeys();
+						
+						if (rs.next()){
+						
+							list.add(rs.getInt(1));
+							
+						}   
+						con.commit();
+					}
+						
+				}
+				catch (SQLException e){
+					e.printStackTrace();
+				}
+				
+			}
+			else {
+				System.out.println("else part of checkExistenceInventoryMarketplace");
+				return null;
+			}
+			System.out.println("id_order: "+ol.id_order);
+			System.out.println("id_inventory_marketplace: "+ol.id_inventory_marketplace);
+			System.out.println("id_inventory_");
+			System.out.println("quantity: "+ol.quantity);
+	}
 		return list;
 	}
 	
