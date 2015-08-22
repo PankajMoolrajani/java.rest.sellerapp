@@ -29,7 +29,7 @@ public class Search {
 		System.out.println("search");
 		System.out.println(bean_search.getColumns());
 		System.out.println(bean_search.getTableName());
-		System.out.println(bean_search.getMapCondition());
+		System.out.println(bean_search.getConditions());
 		return new Gson().toJson(map);
 	}
 	

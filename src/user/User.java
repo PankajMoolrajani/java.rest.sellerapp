@@ -612,8 +612,7 @@ public  class User  {
 		
         Set<String> keys = map_user_bean.keySet();                
         Iterator<String> key_iterator = keys.iterator();
-        while(key_iterator.hasNext())
-        {
+        while(key_iterator.hasNext()){
         	String key = key_iterator.next();
         	//	System.out.println(map_user_bean.get(key));
         	if(map_user_bean.get(key) == null || map_user_bean.get(key).toString().equals("0")){        		

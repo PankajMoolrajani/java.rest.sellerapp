@@ -6,7 +6,7 @@ import java.util.Map;
 public class BeanSearch {
 
 	String table_name, columns, conditions;
-	Map <String, Object>map_condition = new HashMap<String, Object>();
+	Map <String, Object>map_condition;
 	
 	public BeanSearch() {
 		super();
@@ -44,9 +44,5 @@ public class BeanSearch {
 	public void setMapCondition(Map<String, Object> map_condition) {
 		System.out.println("set map condition");
 		this.map_condition = map_condition;
-	}
-	
-	
-	
-	
+	}	
 }
