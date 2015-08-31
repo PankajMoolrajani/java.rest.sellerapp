@@ -1,7 +1,5 @@
 package order;
 
-import inventory.BeanInventory;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -35,7 +33,7 @@ public class Order {
 		Connection con = DbConnection.getConnection();
 		try {
 			con.setAutoCommit(false);
-		} catch (SQLException e) {
+	} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
