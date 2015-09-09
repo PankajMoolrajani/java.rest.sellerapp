@@ -697,7 +697,7 @@ public  class User  {
  			String table = "user";
  			String parameters = "";
  			String condition = "id";
- 			
+ 			//jhkj
  			for(String key : keys){
  				if(map_user_db.containsKey(key)){
  					parameters = parameters + map_user_db.get(key)+" = '"+map_user_bean.get(key)+"',";
