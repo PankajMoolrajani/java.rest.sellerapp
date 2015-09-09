@@ -1,8 +1,5 @@
 package order;
 
-import java.util.ArrayList;
-import java.util.Map;
-
 public class BeanOrderLine {
 
 	int id, id_order, id_inventory_marketplace, quantity;

@@ -1,13 +1,18 @@
 package order;
 
-import inventory.BeanInventory;
-
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +29,8 @@ import order.BeanOrderLine;
 import order.BeanOrder;
 @Path ("/order")
 public class Order {
-
+	
+	
 	@POST
 	@Path ("/create")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -52,7 +58,12 @@ public class Order {
 				
 				ArrayList<Integer> list = this.createOrderLine(con, id, bean_order.getBeanOrderLine());
 				if (list != null){
-					
+					try {
+						con.commit();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					map.put("id", id);
 					
 					map.put("response_code", 2000);
@@ -95,7 +106,7 @@ public class Order {
 	
 	int createOrder(Connection con, BeanOrder bean_order){
 		
-		int id = 0, id_user = 0, id_marketplace, id_inventory_marketplace, id_inventory;
+		int id = 0;
 
 		if (this.checkExistenceUser(bean_order.getIdUser())
 		 && this.checkExistenceMarketplace(bean_order.getIdMarketplace())) {
@@ -141,7 +152,6 @@ public class Order {
 	}
 	
 	ArrayList<Integer> createOrderLine(Connection con, int id_order, ArrayList<BeanOrderLine> list_bean_order_line){
-		System.out.println("Print array list");
 		
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		
@@ -163,8 +173,7 @@ public class Order {
 					ps.setDouble(5, ol.amount_untaxable);
 					ps.setDouble(6, ol.amount_tax);
 					ps.setDouble(7, ol.amount_shipping);
-					ps.setInt(8,  ol.getQuantity());
-					
+					ps.setInt(8,  ol.quantity);
 					
 					int rows_affected =  ps.executeUpdate();
 					
@@ -177,7 +186,7 @@ public class Order {
 							list.add(rs.getInt(1));
 							
 						}   
-						con.commit();
+												
 					}
 						
 				}
@@ -187,15 +196,12 @@ public class Order {
 				
 			}
 			else {
-				System.out.println("else part of checkExistenceInventoryMarketplace");
 				return null;
 			}
-			System.out.println("id_order: "+ol.id_order);
-			System.out.println("id_inventory_marketplace: "+ol.id_inventory_marketplace);
-			System.out.println("id_inventory_");
-			System.out.println("quantity: "+ol.quantity);
-	}
+		}
+		
 		return list;
+		
 	}
 	
 	
@@ -311,4 +317,80 @@ public class Order {
 		
 		return false;
 	}
+	
+	
+	@POST
+	@Path ("/update")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
+	
+	public String update(BeanOrder bean_order){
+		System.out.println("Order Update !");
+		String [] columns = { "id_user", "id_marketplace", "marketplace_orderid", "amount_total_taxable", "amount_total_untaxable", "amount_total_tax", "amount_total_shipping", "amount_total" };
+		Map <String, Object> map = this.getUpdateMap(bean_order, columns);
+		
+		for (Map.Entry<String, Object> e : map.entrySet()){
+			System.out.println(e.getKey()+" - "+e.getValue());
+		}
+
+		return new Gson().toJson(map);
+	}
+	
+	public Map<String, Object> getUpdateMap(Object bean, String [] columns){
+		Map<String,Object> map = new HashMap<String,Object>();
+		Map <String, Object> map_update = new HashMap <String, Object>();
+
+		BeanInfo bean_info = null;
+		try{
+			bean_info = Introspector.getBeanInfo(bean.getClass());
+			for (PropertyDescriptor pd : bean_info.getPropertyDescriptors()) {
+				Method reader = pd.getReadMethod();			
+			    if (reader != null){
+			    	map.put(pd.getName(),reader.invoke(bean));
+			    }
+			}
+		}catch(IllegalArgumentException e){
+			e.printStackTrace();
+		}catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}catch (IntrospectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		for (Map.Entry<String, Object> e : map.entrySet()){
+			String key = e.getKey();
+			for (int i=0; i < key.length(); i++){
+				if (Character.isUpperCase(key.charAt(i))) {
+					key = key.replace(Character.toString(key.charAt(i)), "_"+Character.toLowerCase(key.charAt(i)));
+				}
+			}
+			//System.out.println(key + ": " + map.get(e.getKey()));
+			
+			//String [] columns_order_line = { "id_order", "id_inventory_marketplace", "marketplace_suborderid", "amount_taxable", "amount_untaxable", "amount_tax", "amount_shipping", "quantity" };
+			if (Arrays.asList(columns).contains(key)){
+				
+
+				map_update.put(key, map.get(e.getKey()));
+				//System.out.println(key+": "+map.get(e.getKey()));
+			}
+			
+			//change uppercase into lowercase with prefix of _
+		}
+		
+//		for (Map.Entry<String, Object> e : map.entrySet()){
+//			System.out.println(e.getKey()+" - "+e.getValue());
+//		}
+		
+		return map_update;
+
+	}
+	
+	
 }
