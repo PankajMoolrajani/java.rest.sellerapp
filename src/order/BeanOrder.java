@@ -35,7 +35,23 @@ public class BeanOrder {
 		this.marketplace_orderid = marketplace_orderid;
 		this.list = bean_order_line;
 	}
-
+	
+	public BeanOrder(int id_user, int id_marketplace, int id_inventory_marketplace,
+			int amount_total_taxable, int amount_total_untaxable,
+			int amount_total_tax, int amount_total_shipping, int amount_total,
+			String marketplace_orderid, ArrayList<BeanOrderLine> bean_order_line) {
+		super();
+		this.id_user = id_user;
+		this.id_marketplace = id_marketplace;
+		this.amount_total_taxable = amount_total_taxable;
+		this.amount_total_untaxable = amount_total_untaxable;
+		this.amount_total_tax = amount_total_tax;
+		this.amount_total_shipping = amount_total_shipping;
+		this.amount_total = amount_total;
+		this.marketplace_orderid = marketplace_orderid;
+		this.list = bean_order_line;
+	}
+	
 	public int getId() {
 		return id;
 	}

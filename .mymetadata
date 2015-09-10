@@ -2,7 +2,7 @@
 <project-module
   type="WEB"
   name="rest.sellerapp"
-  id="myeclipse.1434438136986"
+  id="myeclipse.1440998457850"
   context-root="/rest.sellerapp"
   j2ee-spec="5.0"
   archive="rest.sellerapp.war">
