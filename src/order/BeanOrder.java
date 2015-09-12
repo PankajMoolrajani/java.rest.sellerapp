@@ -8,7 +8,8 @@ import order.BeanOrderLine;
 public class BeanOrder {
 	
 	//table order
-	int id, id_user, id_marketplace, amount_total_taxable, amount_total_untaxable, amount_total_tax, amount_total_shipping, amount_total;
+	int id, id_user, id_marketplace;
+	double amount_total_taxable, amount_total_untaxable, amount_total_tax, amount_total_shipping, amount_total;
 	String marketplace_orderid;
 	//table order_line
 	
@@ -20,8 +21,8 @@ public class BeanOrder {
 	}
 
 	public BeanOrder(int id, int id_user, int id_marketplace, int id_inventory_marketplace,
-			int amount_total_taxable, int amount_total_untaxable,
-			int amount_total_tax, int amount_total_shipping, int amount_total,
+			double amount_total_taxable, double amount_total_untaxable,
+			double amount_total_tax, double amount_total_shipping, double amount_total,
 			String marketplace_orderid, ArrayList<BeanOrderLine> bean_order_line) {
 		super();
 		this.id = id;
@@ -76,39 +77,39 @@ public class BeanOrder {
 		this.id_marketplace = id_marketplace;
 	}
 	
-	public int getAmountTotalTaxable() {
+	public double getAmountTotalTaxable() {
 		return amount_total_taxable;
 	}
 
-	public void setAmountTotalTaxable(int amount_total_taxable) {
+	public void setAmountTotalTaxable(double amount_total_taxable) {
 		this.amount_total_taxable = amount_total_taxable;
 	}
 
-	public int getAmountTotalUntaxable() {
+	public double getAmountTotalUntaxable() {
 		return amount_total_untaxable;
 	}
 
-	public void setAmountTotalUntaxable(int amount_total_untaxable) {
+	public void setAmountTotalUntaxable(double amount_total_untaxable) {
 		this.amount_total_untaxable = amount_total_untaxable;
 	}
 
-	public int getAmountTotalTax() {
+	public double getAmountTotalTax() {
 		return amount_total_tax;
 	}
 
-	public void setAmountTotalTax(int amount_total_tax) {
+	public void setAmountTotalTax(double amount_total_tax) {
 		this.amount_total_tax = amount_total_tax;
 	}
 
-	public int getAmountTotalShipping() {
+	public double getAmountTotalShipping() {
 		return amount_total_shipping;
 	}
 
-	public void setAmountTotalShipping(int amount_total_shipping) {
+	public void setAmountTotalShipping(double amount_total_shipping) {
 		this.amount_total_shipping = amount_total_shipping;
 	}
 
-	public int getAmountTotal() {
+	public double getAmountTotal() {
 		return amount_total;
 	}
 
