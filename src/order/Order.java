@@ -123,11 +123,11 @@ public class Order {
 				ps.setInt(1, bean_order.getIdUser());
 				ps.setInt(2, bean_order.getIdMarketplace());
 				ps.setString(3, bean_order.getMarketplaceOrderid());
-				ps.setInt(4, bean_order.getAmountTotalTaxable());
-				ps.setInt(5, bean_order.getAmountTotalUntaxable());
-				ps.setInt(6, bean_order.getAmountTotalTax());
-				ps.setInt(7, bean_order.getAmountTotalShipping());
-				ps.setInt(8, bean_order.getAmountTotal());
+				ps.setDouble(4, bean_order.getAmountTotalTaxable());
+				ps.setDouble(5, bean_order.getAmountTotalUntaxable());
+				ps.setDouble(6, bean_order.getAmountTotalTax());
+				ps.setDouble(7, bean_order.getAmountTotalShipping());
+				ps.setDouble(8, bean_order.getAmountTotal());
 				
 				int rows_affected =  ps.executeUpdate();
 				
