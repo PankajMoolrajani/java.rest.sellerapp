@@ -1,14 +1,11 @@
 package order;
 
-<<<<<<< HEAD
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-=======
->>>>>>> e3c18e02dca4d8032fd4c12227bf78c29471f326
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
