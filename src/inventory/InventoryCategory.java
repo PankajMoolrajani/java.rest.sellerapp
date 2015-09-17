@@ -7,11 +7,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -256,8 +259,7 @@ public  class InventoryCategory  {
     @POST
 	@Path("/get/id")
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.TEXT_PLAIN)
-    
+	@Produces(MediaType.TEXT_PLAIN)    
     public String getId(BeanInventoryCategory bean_inventory_category) {
     	
     	int identifier = bean_inventory_category.getId();
@@ -297,11 +299,8 @@ public  class InventoryCategory  {
 			else {
 				
 				map.put("response_code", 4000);
-				map.put("response_message", "failure: get inventory category - id");
-				
-			}
-		
-				
+				map.put("response_message", "failure: get inventory category - id");				
+			}					
 		}
 		catch (SQLException e){
 			e.printStackTrace();
@@ -310,17 +309,41 @@ public  class InventoryCategory  {
 		return new Gson().toJson(map);
         
     }	
-    
-    @POST
-	@Path("/get/search")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.TEXT_PLAIN)
-    
-    public String getSearch(String identifier) {
-        
-        return null;
-        
+    // i changed it into GET
+    @GET
+	@Path("/get/search/{identifier}")	
+	@Produces(MediaType.TEXT_PLAIN)    
+    public String getSearch(@PathParam("identifier") String identifier) {
+    	System.out.println(identifier);    	
+    	Map <String,Object> map_result = new HashMap<String,Object>();
+    	    	
+    	String table_name = "inventory_category";
+		String columns = "id, name, name_table, id_tax";
+		String condition = "name LIKE ?" ;		
+		String query = "SELECT "+columns+" FROM "+table_name+" WHERE "+condition;		
+		
+		Connection con = DbConnection.getConnection();
+		
+		try {
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setString(1, identifier+"%");			
+			ResultSet rs =  ps.executeQuery();
+			List<BeanInventoryCategory> list_inventory_names = new ArrayList<BeanInventoryCategory>();
+			while (rs.next()){
+				if(!(rs.getString(2).equals("root"))){
+					BeanInventoryCategory bean_inventory_category = new BeanInventoryCategory();
+					bean_inventory_category.setId(rs.getInt(1));
+					bean_inventory_category.setName(rs.getString(2));				
+					list_inventory_names.add(bean_inventory_category);
+				}				
+			}	
+			map_result.put("data",list_inventory_names);
+		}
+		catch (SQLException e){
+			map_result.put("response_message","null_value");
+			return new Gson().toJson(map_result);
+		}
+		System.out.println(new Gson().toJson(map_result));
+		return new Gson().toJson(map_result);                
     }	
-
-
  }

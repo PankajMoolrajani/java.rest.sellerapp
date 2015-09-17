@@ -5,7 +5,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -18,9 +20,11 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import com.google.gson.Gson;
 import com.sun.jersey.multipart.FormDataBodyPart;
 import com.sun.jersey.multipart.FormDataMultiPart;
 import com.sun.jersey.multipart.FormDataParam;
@@ -72,54 +76,66 @@ public class TestClass
 	@Path("/upload") 
 	@Consumes(MediaType.MULTIPART_FORM_DATA)	
 	@Produces(MediaType.TEXT_PLAIN)	
-	public String testUpload(@Context HttpServletRequest request){				
+	public String testUpload(@Context HttpServletRequest request){		
+		Map<String,String> map_result = new HashMap<String,String>();
+		
 		UPLOAD_DIRECTORY = (context.getRealPath("/")).toString()+"/inventory_images/";		
 		boolean isMultipart = ServletFileUpload.isMultipartContent(request);	   
 		if (isMultipart) {
-            // Create a factory for disk-based file items
+			// Create a factory for disk-based file items
             FileItemFactory factory = new DiskFileItemFactory();
 
             // Create a new file upload handler
-            ServletFileUpload upload = new ServletFileUpload(factory);
+            ServletFileUpload upload = new ServletFileUpload(factory);            
+            // Parse the request
+            List<FileItem> multiparts = null;
             try {
-                    // Parse the request
-                    List<FileItem> multiparts = upload.parseRequest(request);                    
-                    String fileName = multiparts.get(0).getName();                    
-                    int index_number = fileName.indexOf("-");
-                    fileName = fileName.substring(0,index_number);
-                    
-                    File finalDirectoryName = new File(UPLOAD_DIRECTORY+fileName);
-                    
-                    // if the directory does not exist, create it
-                    if (!finalDirectoryName.exists()) {	                        
-                        boolean result = false;
+            	multiparts = upload.parseRequest(request);
+			} catch (FileUploadException e) {
+				map_result.put("response_message", "failed");
+				map_result.put("response_code", "3000");
+				return new Gson().toJson(map_result);
+			} 
+            	
+			//make folder name
+			String fileName = multiparts.get(0).getName();                    
+			int index_number = fileName.indexOf("-");
+			fileName = fileName.substring(0,index_number);
+            	
+			File finalDirectoryName = new File(UPLOAD_DIRECTORY+fileName);
+            	
+			// if the directory does not exist, create it
+			if (!finalDirectoryName.exists()) {	                        
+				try{                        	
+					finalDirectoryName.mkdir();                            
+				} 
+				catch(SecurityException se){
+					map_result.put("response_message", "failed");
+					map_result.put("response_code", "3001");
+					return new Gson().toJson(map_result);            	
+            	}                               
+			}else{
+				map_result.put("response_message", "failed");
+				map_result.put("response_code", "3005");
+				return new Gson().toJson(map_result); 
+			}
 
-                        try{
-                        	finalDirectoryName.mkdir();
-                            result = true;
-                        } 
-                        catch(SecurityException se){
-                            //handle it
-                        }        
-                        if(result) {    
-                            System.out.println("DIR created");  
-                        }
-                    }
-
-                    for (FileItem item : multiparts) {	                    	
-                      if (!item.isFormField()) {	                    
-                    	  
-                         String name = new File(item.getName()).getName();
-                         item.write(new File(finalDirectoryName + File.separator + name));
-                      }
-                 }
-            } 
-            catch (Exception e) 
-            {
-              System.out.println("File upload failed");
+			for (FileItem item : multiparts) {	                    	
+				if (!item.isFormField()) {	                    					
+					String name = new File(item.getName()).getName();
+					try {
+						item.write(new File(finalDirectoryName + File.separator + name));
+					} catch (Exception e) {
+						map_result.put("response_message", "failed");							
+						map_result.put("response_code", "3002");
+						return new Gson().toJson(map_result);
+					}
+            	}
             }
-		}
-		return "{}";
+			map_result.put("response_message", "success");
+			map_result.put("response_code", "2000");            	
+		}		
+		return new Gson().toJson(map_result);
 	}	
 	
 	//working function
