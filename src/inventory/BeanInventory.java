@@ -8,6 +8,7 @@ public class BeanInventory {
 	
 	//table stock
 	int available, incoming, outgoing;
+	String aisle, rack, row, case_box;
 	
 	//table price
 	int price_sell, price_mrp;
@@ -20,7 +21,7 @@ public class BeanInventory {
 	public BeanInventory(int id, int id_category, int id_stock, int id_price,
 			String sku, String sku_replica, String name, String status_listing,
 			int available, int incoming, int outgoing, int price_sell,
-			int price_mrp) {
+			int price_mrp, String aisle, String rack, String row, String case_box) {
 		super();
 		this.id = id;
 		this.id_category = id_category;
@@ -35,6 +36,10 @@ public class BeanInventory {
 		this.outgoing = outgoing;
 		this.price_sell = price_sell;
 		this.price_mrp = price_mrp;
+		this.aisle = aisle;
+		this.rack = rack;
+		this.row = row;
+		this.case_box = case_box;
 	}
 
 	public int getId() {
@@ -141,7 +146,35 @@ public class BeanInventory {
 		this.price_mrp = price_mrp;
 	}
 	
+	public void setAisle(String aisle){
+		this.aisle = aisle;
+	}
 	
+	public String getAisle(){
+		return aisle;
+	}
 	
+	public void setRow(String row){
+		this.row = row;
+	}
 	
+	public String getRow(){
+		return row;
+	}
+	
+	public void getRack(String rack){
+		this.rack = rack;
+	}
+	
+	public String getRack(){
+		return rack;
+	}
+	
+	public void setCaseBox(String case_box){
+		this.case_box = case_box;
+	}
+	
+	public String getCaseBox(){
+		return case_box;
+	}
 }

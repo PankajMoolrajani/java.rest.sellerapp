@@ -169,6 +169,11 @@ public  class Inventory  {
 		int outgoing = bean_inventory.getOutgoing();
 		int incoming = bean_inventory.getIncoming();
 		
+		String aisle = bean_inventory.getAisle();
+		String rack = bean_inventory.getRack();
+		String row = bean_inventory.getRow();
+		String case_box = bean_inventory.getCaseBox();
+		
 		Map<String, Object> map_check_existence_stock = new HashMap<String, Object>();
 		
 		map_check_existence_stock = this.checkExistenceStock(available, outgoing, incoming);
@@ -181,7 +186,7 @@ public  class Inventory  {
 		else {
 			
 			String table_name = "stock";
-			String columns = "available, outgoing, incoming";
+			String columns = "available, outgoing, incoming, aisle, rack, row, case_box";
 			String values = "?, ?, ?";
 			String query = "INSERT INTO "+table_name+"("+columns+")"+" VALUES "+"("+values+")";
 			
@@ -193,6 +198,10 @@ public  class Inventory  {
 				ps.setInt(1, available);
 				ps.setInt(2, outgoing);
 				ps.setInt(3, incoming);
+				ps.setString(4, aisle);
+				ps.setString(5, rack);
+				ps.setString(6, row);
+				ps.setString(7, case_box);
 				
 				
 				int rows_affected =  ps.executeUpdate();

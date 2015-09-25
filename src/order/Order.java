@@ -6,7 +6,6 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,9 +14,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -320,6 +321,129 @@ public class Order {
 	}
 	
 	
+	@GET
+	@Path("/get/all")
+	@Produces(MediaType.TEXT_PLAIN)
+    
+    public String getAll() {
+
+    	Map <String,Object> map = new HashMap<String,Object>();
+    	
+    	ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+    	
+    	String table_name = "orders";
+		String columns = "id, id_marketplace, marketplace_orderid, amount_total_taxable, amount_total_untaxable, amount_total_tax, amount_total_shipping, amount_total, id_user";
+		String query = "SELECT "+columns+" FROM "+table_name;
+		
+		
+		Connection con = DbConnection.getConnection();
+		
+		try {
+			
+			PreparedStatement ps = con.prepareStatement(query);
+
+			ResultSet rs =  ps.executeQuery();
+
+			if (rs.first()){
+				
+				while (rs.next()){
+					
+					Map <String,Object> map_rs = new HashMap<String,Object>();
+					
+					map_rs.put("id", rs.getInt("id"));
+					map_rs.put("id_marketplace", rs.getInt("id_marketplace"));
+					map_rs.put("marketplace_orderid", rs.getString("marketplace_orderid"));
+					map_rs.put("amount_total_taxable", rs.getDouble("amount_total_taxable"));
+					map_rs.put("amount_total_untaxable", rs.getDouble("amount_total_untaxable"));
+					map_rs.put("amount_total_tax", rs.getDouble("amount_total_tax"));
+					map_rs.put("amount_total_shipping", rs.getDouble("amount_total_shipping"));
+					map_rs.put("amount_total", rs.getDouble("amount_total"));
+					map_rs.put("id_user", rs.getInt("id_user"));
+					
+					list.add(map_rs);
+					
+				}
+				
+				map.put("data", list);
+				map.put("response_code", 2000);
+				map.put("response_message", "success: get order - all");
+				
+			} 			
+			else {
+				
+				map.put("response_code", 4000);
+				map.put("response_message", "failure: get order - all");
+				
+			}
+				
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+		}
+		
+		return new Gson().toJson(map);
+        
+    }	
+	
+	@POST
+	@Path("/get/id")
+	@Produces(MediaType.TEXT_PLAIN)
+    
+    public String getAll(BeanOrder bean_order) {
+    	
+		Map <String,Object> map = new HashMap<String,Object>();
+    	ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+    	
+    	String table_name = "orders";
+		String columns = "id, id_marketplace, marketplace_orderid, amount_total_taxable, amount_total_untaxable, amount_total_tax, amount_total_shipping, amount_total, id_user";
+		String condition = "id=?";
+		String query = "SELECT "+columns+" FROM "+table_name + " WHERE " + condition;
+		
+		try {
+			
+			Connection con = DbConnection.getConnection();
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setInt(1, bean_order.getId());
+
+			ResultSet rs =  ps.executeQuery();
+			if (rs.next()){
+
+				Map <String,Object> map_rs = new HashMap<String,Object>();
+				
+				map_rs.put("id", rs.getInt("id"));
+				map_rs.put("id_marketplace", rs.getInt("id_marketplace"));
+				map_rs.put("marketplace_orderid", rs.getString("marketplace_orderid"));
+				map_rs.put("amount_total_taxable", rs.getDouble("amount_total_taxable"));
+				map_rs.put("amount_total_untaxable", rs.getDouble("amount_total_untaxable"));
+				map_rs.put("amount_total_tax", rs.getDouble("amount_total_tax"));
+				map_rs.put("amount_total_shipping", rs.getDouble("amount_total_shipping"));
+				map_rs.put("amount_total", rs.getDouble("amount_total"));
+				map_rs.put("id_user", rs.getInt("id_user"));
+				
+				list.add(map_rs);
+				
+				map.put("data", list);
+				map.put("response_code", 2000);
+				map.put("response_message", "success: get order - id");
+				
+			} 			
+			else {
+				
+				map.put("response_code", 4000);
+				map.put("response_message", "failure: get order - id");
+				
+			}
+				
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+		}
+		
+		return new Gson().toJson(map);
+        
+    }	
+	
+	
 	@POST
 	@Path ("/update")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -327,15 +451,103 @@ public class Order {
 	
 	public String update(BeanOrder bean_order){
 		System.out.println("Order Update !");
-		String [] columns = { "id_user", "id_marketplace", "marketplace_orderid", "amount_total_taxable", "amount_total_untaxable", "amount_total_tax", "amount_total_shipping", "amount_total" };
-		Map <String, Object> map = this.getUpdateMap(bean_order, columns);
 		
-		for (Map.Entry<String, Object> e : map.entrySet()){
-			System.out.println(e.getKey()+" - "+e.getValue());
+		Connection con = DbConnection.getConnection();
+		PreparedStatement ps;
+		try {
+			con.setAutoCommit(false);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//update - table order line
+		String [] columns_order_line = {"id_order","id_inventory_marketplace","quantity","amount_taxable","amount_untaxable","amount_tax","amount_shipping","marketplace_suborderid"};		
+		Map<Integer, Map<String,Object>> map_order_line = new HashMap<Integer, Map<String,Object>>();
+		ArrayList<BeanOrderLine> list = bean_order.getBeanOrderLine();
+		Iterator<BeanOrderLine> iterator = list.iterator();
+		while(iterator.hasNext()){			
+			BeanOrderLine bean_order_line = iterator.next();
+			Map<String,Object> map = this.getUpdateMap(bean_order_line, columns_order_line);
+			map_order_line.put(bean_order_line.getId(), map);
+		}
+		
+		
+		for (int key_id: map_order_line.keySet()){
+						
+			String table_name = "order_line";
+			String column = "";
+			String condition = "WHERE id=?";
+			int count = 1;
+			
+			for (String key_column_name: map_order_line.get(key_id).keySet()){
+				if (count == map_order_line.get(key_id).size()){
+					column = column + key_column_name+"="+map_order_line.get(key_id).get(key_column_name)+" ";
+				}
+				else{
+					column = column + key_column_name+"="+map_order_line.get(key_id).get(key_column_name)+", ";
+				}
+				count++;
+			}
+			
+			String query = "UPDATE " + table_name + " SET " + column + condition;
+			System.out.println(query+key_id);
+			
+			try {
+				ps = con.prepareStatement(query);
+				ps.setInt(1, key_id);
+				ps.execute();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+				
+		//update - table order
+		String [] columns_order = { "id_user", "id_marketplace", "marketplace_orderid", "amount_total_taxable", "amount_total_untaxable", "amount_total_tax", "amount_total_shipping", "amount_total" };
+		Map <String, Object> map_orders = this.getUpdateMap(bean_order, columns_order);
+		
+		String table_name = "orders";
+		String column = "";
+		String condition = "WHERE id=?";
+		int count = 1;
+		for (String key: map_orders.keySet()){
+			if (count == map_orders.size()){				
+				if (map_orders.get(key) instanceof String){
+					column = column + key + "='" + map_orders.get(key) + "' ";
+				}
+				else {
+					column = column + key + "=" + map_orders.get(key) + " ";
+				}
+			}
+			else{
+				if (map_orders.get(key) instanceof String){
+					column = column + key + "='" + map_orders.get(key) + "', ";
+				}
+				else {
+					column = column + key + "=" + map_orders.get(key) + ", ";
+				}
+			}
+			count++;
+		}
+		
+		String query = "UPDATE " + table_name + " SET " + column + condition;
+		System.out.println(query+bean_order.getId());
+		
+		try {
+			ps = con.prepareStatement(query);
+			ps.setInt(1, bean_order.getId());
+			ps.execute();
+			con.commit();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
-		return new Gson().toJson(map);
+		return new Gson().toJson(map_orders);
 	}
+	
 	
 	public Map<String, Object> getUpdateMap(Object bean, String [] columns){
 		Map<String,Object> map = new HashMap<String,Object>();
@@ -366,31 +578,21 @@ public class Order {
 		
 		
 		for (Map.Entry<String, Object> e : map.entrySet()){
+			
 			String key = e.getKey();
+			
 			for (int i=0; i < key.length(); i++){
 				if (Character.isUpperCase(key.charAt(i))) {
 					key = key.replace(Character.toString(key.charAt(i)), "_"+Character.toLowerCase(key.charAt(i)));
 				}
 			}
-			//System.out.println(key + ": " + map.get(e.getKey()));
-			
-			//String [] columns_order_line = { "id_order", "id_inventory_marketplace", "marketplace_suborderid", "amount_taxable", "amount_untaxable", "amount_tax", "amount_shipping", "quantity" };
+	
 			if (Arrays.asList(columns).contains(key)){
-				
-
 				map_update.put(key, map.get(e.getKey()));
-				//System.out.println(key+": "+map.get(e.getKey()));
 			}
 			
-			//change uppercase into lowercase with prefix of _
 		}
-		
-//		for (Map.Entry<String, Object> e : map.entrySet()){
-//			System.out.println(e.getKey()+" - "+e.getValue());
-//		}
-		
 		return map_update;
-
 	}
 	
 	
