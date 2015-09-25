@@ -52,15 +52,13 @@ public class UniwareUpload {
 	@Produces(MediaType.TEXT_PLAIN)	
 	public String uploadFile(@FormDataParam("file") InputStream is, 
 	                    	   @FormDataParam("file") FormDataContentDisposition formData) {
-		List list = new LinkedList();
-		
 		
 	    String fileLocation = (context.getRealPath("/")).toString()+"/order_file/" + formData.getFileName();
 	    try {
 			saveFile(is, fileLocation);
 			//String result = "Successfully File Uploaded on the path "+fileLocation;	
 			
-			paseUniwareFileData(fileLocation);
+			//paseUniwareFileData(fileLocation);
 			
 			return "{}"; //{'id':14,'response_message':'success : create category','response_code':2000}
 		} catch (IOException e) {
@@ -204,6 +202,8 @@ public class UniwareUpload {
 						amount_untaxable = 0;
 						amount_taxable = selling_price;
 					}	
+					
+				//	order_bean.setAmountTotalTaxable(amount_taxable);
 					
 					order_line_bean.setAmountTaxable(amount_taxable);
 					order_line_bean.setAmountUntaxable(amount_untaxable);
