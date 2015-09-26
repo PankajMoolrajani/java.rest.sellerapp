@@ -4,7 +4,7 @@ public class BeanInventory {
 	
 	//table - inventory
 	int id, id_category, id_stock, id_price;
-	String sku, sku_replica, name, status_listing;
+	String sku, name, status_listing, image_dir;
 	
 	//table stock
 	int available, incoming, outgoing;
@@ -19,16 +19,15 @@ public class BeanInventory {
 	}
 
 	public BeanInventory(int id, int id_category, int id_stock, int id_price,
-			String sku, String sku_replica, String name, String status_listing,
+			String sku, String name, String status_listing,
 			int available, int incoming, int outgoing, int price_sell,
-			int price_mrp, String aisle, String rack, String row, String case_box) {
+			int price_mrp, String aisle, String rack, String row, String case_box, String image_dir) {
 		super();
 		this.id = id;
 		this.id_category = id_category;
 		this.id_stock = id_stock;
 		this.id_price = id_price;
 		this.sku = sku;
-		this.sku_replica = sku_replica;
 		this.name = name;
 		this.status_listing = status_listing;
 		this.available = available;
@@ -40,6 +39,7 @@ public class BeanInventory {
 		this.rack = rack;
 		this.row = row;
 		this.case_box = case_box;
+		this.image_dir = image_dir;
 	}
 
 	public int getId() {
@@ -80,14 +80,6 @@ public class BeanInventory {
 
 	public void setSku(String sku) {
 		this.sku = sku;
-	}
-
-	public String getSkuReplica() {
-		return sku_replica;
-	}
-
-	public void setSkuReplica(String sku_replica) {
-		this.sku_replica = sku_replica;
 	}
 
 	public String getName() {
@@ -176,5 +168,13 @@ public class BeanInventory {
 	
 	public String getCaseBox(){
 		return case_box;
+	}
+	
+	public void setImageDir(String image_dir){
+		this.image_dir = image_dir;
+	}
+	
+	public String getImageDir(){
+		return image_dir;
 	}
 }

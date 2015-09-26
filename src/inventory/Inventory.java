@@ -175,7 +175,7 @@ public  class Inventory  {
 			id_category = (Integer) map_check_existence_category.get("id_category");
 			
 			String table_name = "inventory";
-			String columns = "id_category, id_stock, id_price, sku, sku_replica, name, status_listing";
+			String columns = "id_category, id_stock, id_price, sku, name, status_listing, image_dir";
 			String values = "?, ?, ?, ?, ?, ?, ?";
 			String query = "INSERT INTO "+table_name+"("+columns+")"+" VALUES "+"("+values+")";
 			
@@ -188,9 +188,9 @@ public  class Inventory  {
 				ps.setInt(2, id_stock);
 				ps.setInt(3, id_price);
 				ps.setString(4, bean_inventory.getSku());
-				ps.setString(5, bean_inventory.getSkuReplica());
-				ps.setString(6, bean_inventory.getName());
-				ps.setString(7, bean_inventory.getStatusListing());
+				ps.setString(5, bean_inventory.getName());
+				ps.setString(6, bean_inventory.getStatusListing());
+				ps.setString(7, bean_inventory.getImageDir());
 			
 				int rows_affected =  ps.executeUpdate();
 				
@@ -549,7 +549,7 @@ public  class Inventory  {
     	ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
     	
     	String table_name = "inventory i, price p, stock s";
-		String columns = "i.id, i.sku, i.name, i.status_listing, s.available, s.outgoing, s.incoming, p.price_mrp, p.price_sell";
+		String columns = "i.id, i.sku, i.name, i.status_listing, i.image_dir, s.available, s.outgoing, s.incoming, p.price_mrp, p.price_sell";
 		String condition = "i.id_price = p.id and i.id_stock = s.id";
 		String query = "SELECT "+columns+" FROM "+table_name+" WHERE "+condition;
 		
@@ -571,6 +571,7 @@ public  class Inventory  {
 					map_rs.put("id", rs.getInt("id"));
 					map_rs.put("sku", rs.getString("sku"));
 					map_rs.put("name", rs.getString("name"));
+					map_rs.put("image_dir", rs.getString("image_dir"));
 					map_rs.put("status_listing", rs.getString("status_listing"));
 					map_rs.put("available", rs.getInt("available"));
 					map_rs.put("outgoing", rs.getInt("outgoing"));
@@ -615,7 +616,7 @@ public  class Inventory  {
     	Map <String,Object> map = new HashMap<String,Object>();
     	    	
     	String table_name = "inventory i, price p, stock s";
-		String columns = "i.id, i.sku, i.name, i.status_listing, s.available, s.outgoing, s.incoming, p.price_mrp, p.price_sell";
+		String columns = "i.id, i.sku, i.name, i.status_listing, i.image_dir, s.available, s.outgoing, s.incoming, p.price_mrp, p.price_sell";
 		String condition = "i.id = ? and i.id_price = p.id and i.id_stock = s.id";
 		String query = "SELECT "+columns+" FROM "+table_name+" WHERE "+condition;
 		
@@ -635,6 +636,7 @@ public  class Inventory  {
 				map_rs.put("id", identifier);
 				map_rs.put("sku", rs.getString("sku"));
 				map_rs.put("name", rs.getString("name"));
+				map_rs.put("image_dir", rs.getString("image_dir"));
 				map_rs.put("status_listing", rs.getString("status_listing"));
 				map_rs.put("available", rs.getInt("available"));
 				map_rs.put("outgoing", rs.getInt("outgoing"));
