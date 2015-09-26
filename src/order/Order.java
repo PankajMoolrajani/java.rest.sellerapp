@@ -450,7 +450,8 @@ public class Order {
 	@Produces(MediaType.TEXT_PLAIN)
 	
 	public String update(BeanOrder bean_order){
-		System.out.println("Order Update !");
+		
+		Map <String,Object> map = new HashMap<String,Object>();
 		
 		Connection con = DbConnection.getConnection();
 		PreparedStatement ps;
@@ -468,18 +469,17 @@ public class Order {
 		Iterator<BeanOrderLine> iterator = list.iterator();
 		while(iterator.hasNext()){			
 			BeanOrderLine bean_order_line = iterator.next();
-			Map<String,Object> map = this.getUpdateMap(bean_order_line, columns_order_line);
-			map_order_line.put(bean_order_line.getId(), map);
+			Map<String,Object> map_update = this.getUpdateMap(bean_order_line, columns_order_line);
+			map_order_line.put(bean_order_line.getId(), map_update);
 		}
-		
 		
 		for (int key_id: map_order_line.keySet()){
 						
 			String table_name = "order_line";
 			String column = "";
 			String condition = "WHERE id=?";
-			int count = 1;
 			
+			int count = 1;
 			for (String key_column_name: map_order_line.get(key_id).keySet()){
 				if (count == map_order_line.get(key_id).size()){
 					column = column + key_column_name+"="+map_order_line.get(key_id).get(key_column_name)+" ";
@@ -491,8 +491,7 @@ public class Order {
 			}
 			
 			String query = "UPDATE " + table_name + " SET " + column + condition;
-			System.out.println(query+key_id);
-			
+
 			try {
 				ps = con.prepareStatement(query);
 				ps.setInt(1, key_id);
@@ -500,6 +499,9 @@ public class Order {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				map.put("response_code", 4000);
+				map.put("response_message", "failure: update order - order_line");
+				return new Gson().toJson(map);
 			}
 			
 		}
@@ -511,6 +513,7 @@ public class Order {
 		String table_name = "orders";
 		String column = "";
 		String condition = "WHERE id=?";
+		
 		int count = 1;
 		for (String key: map_orders.keySet()){
 			if (count == map_orders.size()){				
@@ -533,7 +536,6 @@ public class Order {
 		}
 		
 		String query = "UPDATE " + table_name + " SET " + column + condition;
-		System.out.println(query+bean_order.getId());
 		
 		try {
 			ps = con.prepareStatement(query);
@@ -543,9 +545,14 @@ public class Order {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			map.put("response_code", 4000);
+			map.put("response_message", "failure: update order - table orders");
+			return new Gson().toJson(map);
 		}
-
-		return new Gson().toJson(map_orders);
+		
+		map.put("response_code", 2000);
+		map.put("response_message", "success: update order");
+		return new Gson().toJson(map);
 	}
 	
 	
@@ -574,8 +581,6 @@ public class Order {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
 		
 		for (Map.Entry<String, Object> e : map.entrySet()){
 			
