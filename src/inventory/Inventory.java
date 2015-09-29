@@ -105,7 +105,7 @@ public  class Inventory  {
 					}
             	}
             }		
-			map_result.put("url_images","/inventory_images/"+folder_name+"/");
+			map_result.put("image_dir_path","/inventory_images/"+folder_name+"/");
 		}		
 		map_result.put("response_message", "success");
 		map_result.put("response_code", "2000");     		
@@ -118,7 +118,7 @@ public  class Inventory  {
 	@Produces(MediaType.TEXT_PLAIN)
 	
     public String create(BeanInventory bean_inventory) {
-        
+        System.out.println("hello reached here");
 		Map <String,Object> map = new HashMap<String,Object>();
 		
 		int id = 0;
