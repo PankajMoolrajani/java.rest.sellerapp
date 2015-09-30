@@ -117,8 +117,7 @@ public  class Inventory  {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	
-    public String create(BeanInventory bean_inventory) {
-        System.out.println("hello reached here");
+    public String create(BeanInventory bean_inventory) {        
 		Map <String,Object> map = new HashMap<String,Object>();
 		
 		int id = 0;
