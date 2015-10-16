@@ -12,9 +12,9 @@ public class DbConnection
 	{
 		try
 		{
-			String db_url="jdbc:mysql://dev.monoxor.com/db_pkagencies";
-			String db_user = "dev";
-			String db_pass = "ecom";
+			String db_url="";
+			String db_user = "";
+			String db_pass = "";
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection con =  DriverManager.getConnection(db_url,db_user,db_pass);
 			return con;
