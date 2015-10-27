@@ -1,8 +1,7 @@
-
-
 package inventory;
 
 import java.io.File;
+import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,8 +9,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -23,11 +25,15 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import order.BeanOrder;
+
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+
+import au.com.bytecode.opencsv.CSVReader;
 
 import com.google.gson.Gson;
 import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
@@ -111,6 +117,8 @@ public  class Inventory  {
 		map_result.put("response_code", "2000");     		
 		return new Gson().toJson(map_result);
 	}	
+	
+	
 	
 	@POST
 	@Path("/create")
@@ -615,14 +623,13 @@ public  class Inventory  {
     	Map <String,Object> map = new HashMap<String,Object>();
     	    	
     	String table_name = "inventory i, price p, stock s";
-		String columns = "i.id, i.sku, i.name, i.status_listing, i.image_dir, s.available, s.outgoing, s.incoming, p.price_mrp, p.price_sell";
+		String columns = "i.id, i.id_category, i.sku, i.name, i.status_listing, i.image_dir, s.available, s.outgoing, s.incoming, p.price_mrp, p.price_sell";
 		String condition = "i.id = ? and i.id_price = p.id and i.id_stock = s.id";
 		String query = "SELECT "+columns+" FROM "+table_name+" WHERE "+condition;
 		
 		Connection con = DbConnection.getConnection();
 		
-		try {
-			
+		try {			
 			PreparedStatement ps = con.prepareStatement(query);
 			ps.setInt(1, identifier);
 
@@ -633,8 +640,9 @@ public  class Inventory  {
 				Map <String,Object> map_rs = new HashMap<String,Object>();
 				
 				map_rs.put("id", identifier);
-				map_rs.put("sku", rs.getString("sku"));
+				map_rs.put("sku", rs.getString("sku"));				
 				map_rs.put("name", rs.getString("name"));
+				map_rs.put("id_category", rs.getInt("id_category"));
 				map_rs.put("image_dir", rs.getString("image_dir"));
 				map_rs.put("status_listing", rs.getString("status_listing"));
 				map_rs.put("available", rs.getInt("available"));

@@ -1,8 +1,5 @@
 
-
 package user;
-
-
 
 public  class BeanUserCategory  {
 

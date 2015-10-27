@@ -64,9 +64,7 @@ public class UniwareUpload {
 		} catch (IOException e) {
 			e.printStackTrace();
 			return "{'error':'yes_error'}";			
-		}		
-		
-		
+		}				
 	}
 	
 	private void saveFile(InputStream is, String fileLocation) throws IOException {
@@ -79,7 +77,6 @@ public class UniwareUpload {
 	}
 	
 	private void paseUniwareFileData(String fileLocation){
-
         CSVReader reader;					    	    
 	    Map<String,BeanOrder> uniware_file_data_map = new LinkedHashMap<String,BeanOrder>(200,0.50f);	    	   
 	    Set<String> order_id_set = new LinkedHashSet<String>();
@@ -150,17 +147,15 @@ public class UniwareUpload {
 //            		tax_Percent_Column_No = i;
 //            		continue;
 //            	}            	
-            }                           
-        	int i=1;
-        	
+            }       
+                    	       
         	BeanOrder order_bean = null;
         	BeanOrderLine order_line_bean = null;
         	
         	//all marketplaceIds
         	Map<String,Integer> marketplace_ids_map = fetchMarketplaceIds();
         	        
-            while ((row = reader.readNext()) != null) {	    		             	
-            	
+            while ((row = reader.readNext()) != null) {	    		             	            	
 	        	String order_id = row[order_ID_Column_No].toString().trim();
 	        	String sub_order_id = row[sub_Order_Id_Column_No].toString().trim();
 	        	String sku_value = row[sku_Column_No].toString().trim();
