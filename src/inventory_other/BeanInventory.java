@@ -1,4 +1,6 @@
-package inventory;
+package inventory_other;
+
+import java.util.ArrayList;
 
 public class BeanInventory {
 	
@@ -12,7 +14,9 @@ public class BeanInventory {
 	
 	//table price
 	int price_sell, price_mrp;
-		
+	
+	ArrayList<BeanInventoryMarketplace> list;
+	
 	public BeanInventory() {
 		super();
 		// TODO Auto-generated constructor stub

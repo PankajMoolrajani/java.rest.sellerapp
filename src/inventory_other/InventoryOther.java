@@ -1,7 +1,5 @@
 package inventory_other;
 
-import inventory.BeanInventory;
-
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -27,6 +25,7 @@ import java.util.Set;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -173,6 +172,8 @@ public class InventoryOther {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String updateInventory(BeanInventory bean_inventory){
+		Map <String,Object> map = new HashMap<String,Object>();
+		
 		Map<String,Object> map_inventory_bean = new HashMap<String,Object>();
 		BeanInfo info = null;
 		
@@ -266,12 +267,15 @@ public class InventoryOther {
  		//get id's of foreign keys in inventory
  		Map<String,Integer> map_inventory_ids = new HashMap<String,Integer>();
         Connection con = DbConnection.getConnection();
+        
         String table_inventory_ids = "inventory";
         String columns_inventory_ids = "id_category,id_stock,id_price,tag_ids";
         String condition_inventory_ids = "id=?";
+        
         String query_inventory_ids = "SELECT "+columns_inventory_ids+" FROM "+table_inventory_ids+" WHERE "+condition_inventory_ids; 			
         PreparedStatement ps_inventory_ids;
-		try {			
+		
+        try {			
 			ps_inventory_ids = con.prepareStatement(query_inventory_ids);
 			ps_inventory_ids.setInt(1, (Integer)map_inventory_bean.get("id"));
 			ResultSet rs_inventory_ids = ps_inventory_ids.executeQuery();
@@ -287,159 +291,209 @@ public class InventoryOther {
 			e1.printStackTrace();
 		}        
 	//flag -1
-//        if(is_stock_update == true){
-//        	System.out.println("is_stock_update is true");
-// 			String table = "stock";
-// 			String columns = "*";
-// 			String condition = "incoming=? AND available=? AND outgoing=?";
-// 			
-//			 	
-// 			
-// 			try{ 				 				 			
-// 				con.setAutoCommit(false);
-// 				//condition = condition.substring(0, condition.length()-1);
-// 				
-// 				//check if stock pair with new parameters is already exist 				
-// 				String query_check_exist = "SELECT "+columns+" FROM "+table+" WHERE "+condition;
-// 				System.out.println(query_check_exist);
-// 				PreparedStatement ps_check_exist = con.prepareStatement(query_check_exist);
-// 				ps_check_exist.setInt(1, (Integer)map_inventory_bean.get("incoming"));
-// 				ps_check_exist.setInt(2, (Integer)map_inventory_bean.get("available"));
-// 				ps_check_exist.setInt(3, (Integer)map_inventory_bean.get("outgoing"));
-// 				
-// 				ResultSet rs_check_exist = ps_check_exist.executeQuery();
-// 				boolean is_stock_exist = rs_check_exist.next();
-// 				
-// 				if(!is_stock_exist){
-// 					int id = 0;
-// 		 			String parameters_new_stock = "?,?,?,?,?,?,?,?";
-// 		 			
-//// 		 			//String condition = "id"; 			
-//// 		 			for(String key : keys){
-//// 		 				if(map_stock_db.containsKey(key)){
-//// 		 					parameters_new_stock = parameters_new_stock + map_stock_db.get(key)+" = "+map_inventory_bean.get(key)+",";
-//// 		        		}
-//// 		 			}     
-// 		 			String query = "INSERT INTO "+table+" VALUES ("+parameters_new_stock+")"; 		
-// 		 			System.out.println(query);
-// 					PreparedStatement ps_new_stock = con.prepareStatement(query , Statement.RETURN_GENERATED_KEYS);
-// 					ps_new_stock.setInt(1, 0);
-// 					ps_new_stock.setInt(2, (Integer)map_inventory_bean.get("available"));
-// 					ps_new_stock.setInt(3, (Integer)map_inventory_bean.get("incoming"));
-// 					ps_new_stock.setInt(4, (Integer)map_inventory_bean.get("outgoing")); 					
-// 					ps_new_stock.setString(5, null);
-// 					ps_new_stock.setString(6, null);
-// 					ps_new_stock.setString(7, null);
-// 					ps_new_stock.setString(8, null); 					
-// 					int rows_affected = ps_new_stock.executeUpdate();
-// 					
-// 					if (rows_affected != 0){ 						
-// 						ResultSet rs = ps_new_stock.getGeneratedKeys();
-// 						
-// 						if (rs.next()){
-// 						
-// 							id_new_stock = rs.getInt(1);
-// 							
-// 						}    			
-// 					}
-// 					con.commit();
-// 					System.out.println("this is id: "+id_new_stock);
-// 				}else{
-// 					id_existed_stock = rs_check_exist.getInt("id");
-// 					
-// 				} 				
-// 			}catch(SQLException e){
-// 				System.out.println("error in stock update");
-// 				e.printStackTrace();
-//        	}
-// 		}
-//     //flag-2   
-//        if(is_price_update == true){
-//        	String table = "price";
-// 			String columns = "*";
-// 			String condition = "price_sell=? AND price_mrp=?";
-// 			 			
-// 			try{ 				 				 			
-// 				con.setAutoCommit(false);
-// 				//condition = condition.substring(0, condition.length()-1);
-// 				
-// 				//check if stock pair with new parameters is already exist 				
-// 				String query_check_exist = "SELECT "+columns+" FROM "+table+" WHERE "+condition;
-// 				System.out.println(query_check_exist);
-// 				PreparedStatement ps_check_exist = con.prepareStatement(query_check_exist);
-// 				ps_check_exist.setInt(1, (Integer)map_inventory_bean.get("priceSell"));
-// 				ps_check_exist.setInt(2, (Integer)map_inventory_bean.get("priceMrp")); 				
-// 				
-// 				ResultSet rs_check_exist = ps_check_exist.executeQuery();
-// 				boolean is_price_exist = rs_check_exist.next();
-// 				
-// 				if(!is_price_exist){
-// 					int id = 0;
-// 		 			String parameters_new_stock = "?,?,?";
-// 		 			
-//// 		 			//String condition = "id"; 			
-//// 		 			for(String key : keys){
-//// 		 				if(map_stock_db.containsKey(key)){
-//// 		 					parameters_new_stock = parameters_new_stock + map_stock_db.get(key)+" = "+map_inventory_bean.get(key)+",";
-//// 		        		}
-//// 		 			}     
-// 		 			String query = "INSERT INTO "+table+" VALUES ("+parameters_new_stock+")"; 		
-// 		 			System.out.println(query);
-// 					PreparedStatement ps_new_stock = con.prepareStatement(query , Statement.RETURN_GENERATED_KEYS);
-// 					ps_new_stock.setInt(1, 0);
-// 					ps_new_stock.setInt(2, (Integer)map_inventory_bean.get("priceSell"));
-// 					ps_new_stock.setInt(3, (Integer)map_inventory_bean.get("priceMrp")); 								 					
-// 					
-// 					int rows_affected = ps_new_stock.executeUpdate();
-// 					
-// 					if (rows_affected != 0){ 						
-// 						ResultSet rs = ps_new_stock.getGeneratedKeys();
-// 						
-// 						if (rs.next()){
-// 						
-// 							id_new_price = rs.getInt(1);
-// 							
-// 						}    			
-// 					}
-// 					con.commit();
-// 					System.out.println("this is id: "+id_new_price);
-// 				}else{
-// 					id_existed_price = rs_check_exist.getInt("id");
-// 					
-// 				} 				
-// 			}catch(SQLException e){
-// 				System.out.println("error in stock update");
-// 				e.printStackTrace();
-//        	}
-// 		}
+        if(is_stock_update == true){
+        	System.out.println("is_stock_update is true");
+ 			String table = "stock";
+ 			String columns = "*";
+ 			String condition = "incoming=? AND available=? AND outgoing=?";
+ 			
+ 			try{ 				 				 			
+ 				con.setAutoCommit(false);
+ 				//condition = condition.substring(0, condition.length()-1);
+ 				
+ 				//check if stock pair with new parameters is already exist 				
+ 				String query_check_exist = "SELECT "+columns+" FROM "+table+" WHERE "+condition; 				
+ 				PreparedStatement ps_check_exist = con.prepareStatement(query_check_exist);
+ 				ps_check_exist.setInt(1, (Integer)map_inventory_bean.get("incoming"));
+ 				ps_check_exist.setInt(2, (Integer)map_inventory_bean.get("available"));
+ 				ps_check_exist.setInt(3, (Integer)map_inventory_bean.get("outgoing"));
+ 				
+ 				ResultSet rs_check_exist = ps_check_exist.executeQuery();
+ 				boolean is_stock_exist = rs_check_exist.next();
+ 				
+ 				if(!is_stock_exist){
+ 					int id = 0;
+ 		 			String parameters_new_stock = "?,?,?,?,?,?,?,?"; 		 			   
+ 		 			String query = "INSERT INTO "+table+" VALUES ("+parameters_new_stock+")"; 		 		 			
+ 					PreparedStatement ps_new_stock = con.prepareStatement(query , Statement.RETURN_GENERATED_KEYS);
+ 					ps_new_stock.setInt(1, 0);
+ 					ps_new_stock.setInt(2, (Integer)map_inventory_bean.get("available"));
+ 					ps_new_stock.setInt(3, (Integer)map_inventory_bean.get("incoming"));
+ 					ps_new_stock.setInt(4, (Integer)map_inventory_bean.get("outgoing")); 					
+ 					ps_new_stock.setString(5, null);
+ 					ps_new_stock.setString(6, null);
+ 					ps_new_stock.setString(7, null);
+ 					ps_new_stock.setString(8, null); 					
+ 					int rows_affected = ps_new_stock.executeUpdate();
+ 					
+ 					if (rows_affected != 0){ 						
+ 						ResultSet rs = ps_new_stock.getGeneratedKeys();
+ 						
+ 						if (rs.next()){
+ 						
+ 							id_new_stock = rs.getInt(1);
+ 							
+ 						}    			
+ 					}
+ 					con.commit();
+ 					map_inventory_ids.put("id_stock", id_new_stock); 					
+ 				}else{
+ 					id_existed_stock = rs_check_exist.getInt("id");
+ 					map_inventory_ids.put("id_stock", id_existed_stock);
+ 				} 				
+ 			}catch(SQLException e){ 				
+ 				e.printStackTrace();
+ 				map.put("response_code", 4000);
+ 				map.put("response_message", "failure: update inventory - table stock");
+ 				return new Gson().toJson(map);
+        	}
+ 		}
+     //flag-2   
+        if(is_price_update == true){
+        	String table = "price";
+ 			String columns = "*";
+ 			String condition = "price_sell=? AND price_mrp=?";
+ 			 			
+ 			try{ 				 				 			
+ 				con.setAutoCommit(false);
+ 				//condition = condition.substring(0, condition.length()-1);
+ 				
+ 				//check if stock pair with new parameters is already exist 				
+ 				String query_check_exist = "SELECT "+columns+" FROM "+table+" WHERE "+condition; 				
+ 				PreparedStatement ps_check_exist = con.prepareStatement(query_check_exist);
+ 				ps_check_exist.setInt(1, (Integer)map_inventory_bean.get("priceSell"));
+ 				ps_check_exist.setInt(2, (Integer)map_inventory_bean.get("priceMrp")); 				
+ 				
+ 				ResultSet rs_check_exist = ps_check_exist.executeQuery();
+ 				boolean is_price_exist = rs_check_exist.next();
+ 				
+ 				if(!is_price_exist){
+ 					int id = 0;
+ 		 			String parameters_new_stock = "?,?,?";
+ 		 			String query = "INSERT INTO "+table+" VALUES ("+parameters_new_stock+")"; 		
+ 		 			
+ 					PreparedStatement ps_new_stock = con.prepareStatement(query , Statement.RETURN_GENERATED_KEYS);
+ 					ps_new_stock.setInt(1, 0);
+ 					ps_new_stock.setInt(2, (Integer)map_inventory_bean.get("priceSell"));
+ 					ps_new_stock.setInt(3, (Integer)map_inventory_bean.get("priceMrp")); 								 					
+ 					
+ 					int rows_affected = ps_new_stock.executeUpdate();
+ 					
+ 					if (rows_affected != 0){ 						
+ 						ResultSet rs = ps_new_stock.getGeneratedKeys();
+ 						
+ 						if (rs.next()){
+ 						
+ 							id_new_price = rs.getInt(1);
+ 							
+ 						}    			
+ 					}
+ 					con.commit();
+ 					map_inventory_ids.put("id_price", id_new_stock); 					
+ 				}else{
+ 					id_existed_price = rs_check_exist.getInt("id");
+ 					map_inventory_ids.put("id_price", id_existed_price);
+ 				} 				
+ 			}catch(SQLException e){ 				
+ 				e.printStackTrace();
+ 				map.put("response_code", 4000);
+ 				map.put("response_message", "failure: update inventory - table price");
+ 				return new Gson().toJson(map);
+        	}
+ 		}
         
         try{
-        	String table_update_inventory = "";
-        	String parameter_update_inventory = "id_stock=? AND id_price=? AND ";
-        	String condition_update_inventory = "";
+        	String table_update_inventory = "inventory";
+        	String parameter_update_inventory = "id_stock=?,id_price=?,";
+        	String condition_update_inventory = "id=?";
         	
-	 		for(String key : keys){	 	
-	 			
+	 		for(String key : keys){	 		 			
 				if(map_inventory_db.containsKey(key)){
 					//id_category is coming from request, if it is zero then not concedered
 					if(map_inventory_db.get(key).equals("id_category")){
-						//System.out.println("here it is "+map_inventory_bean.get(key).toString().trim());
 						if(!map_inventory_bean.get(key).toString().trim().equals("0")){
-							//System.out.println(" * "+parameter_update_inventory);
-							parameter_update_inventory = parameter_update_inventory + map_inventory_db.get(key)+" = "+map_inventory_bean.get(key)+",";
+							parameter_update_inventory = parameter_update_inventory + map_inventory_db.get(key)+" = '"+map_inventory_bean.get(key)+"',";
 						}						
 					}
 					else{
-						//System.out.println("i m here "+map_inventory_db.get(key)+" "+map_inventory_bean.get(key));
-						parameter_update_inventory = parameter_update_inventory + map_inventory_db.get(key)+" = "+map_inventory_bean.get(key)+",";
+						parameter_update_inventory = parameter_update_inventory + map_inventory_db.get(key)+" = '"+map_inventory_bean.get(key)+"',";
 					}					
 				}
 			}
-	 		System.out.println(parameter_update_inventory);
-	 		//query_update_inventory = "UPDATE FROM "+table_update_inventory+" SET "+
+	 		parameter_update_inventory = parameter_update_inventory.substring(0, parameter_update_inventory.length()-1);	 		
+	 		String query_update_inventory = "UPDATE "+table_update_inventory+" SET "+parameter_update_inventory+" WHERE "+condition_update_inventory;
+	 		
+	 		PreparedStatement ps_update_inventory = con.prepareStatement(query_update_inventory);
+	 		ps_update_inventory.setInt(1, map_inventory_ids.get("id_stock"));
+	 		ps_update_inventory.setInt(2, map_inventory_ids.get("id_price"));
+	 		ps_update_inventory.setInt(3, (Integer)map_inventory_bean.get("id"));	 			 	
+	 		ps_update_inventory.execute();
+	 		con.commit();	 		
         }catch(Exception e){
-        	
-        }
-		return "";
+        	e.printStackTrace();
+        	map.put("response_code", 4000);
+        	map.put("response_message", "failure: update inventory - table inventory");
+        	return new Gson().toJson(map);
+        }	
+        map.put("response_code", 2000);
+		map.put("response_message", "success: update inventory");
+		return new Gson().toJson(map);
 	}
+	
+	@GET
+	@Path("/get/all")
+	@Produces(MediaType.TEXT_PLAIN)
+    
+    public String getAll() {
+
+    	Map <String,Object> map = new HashMap<String,Object>();
+    	
+    	ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+    	
+    	String table_name = "marketplace";
+		String columns = "id,name,type,url";
+		String query = "SELECT "+columns+" FROM "+table_name;
+		
+		
+		Connection con = DbConnection.getConnection();
+		
+		try {
+			
+			PreparedStatement ps = con.prepareStatement(query);
+
+			ResultSet rs =  ps.executeQuery();
+
+			while (rs.next()){
+						
+				Map <String,Object> map_rs = new HashMap<String,Object>();
+				
+				map_rs.put("id", rs.getInt("id"));
+				map_rs.put("name", rs.getString("name"));
+				map_rs.put("type", rs.getString("type"));
+				map_rs.put("url", rs.getString("url"));					
+					
+				list.add(map_rs);
+				
+				map.put("data", list);
+				map.put("response_code", 2000);
+				map.put("response_message", "success: get order - all");				
+			} 			
+//			else {
+//				
+//				map.put("response_code", 4000);
+//				map.put("response_message", "failure: get order - all");
+//				
+//			}
+				
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+			map.put("response_code", 4000);
+			map.put("response_message", "failure: get order - all");
+		}
+		
+		return new Gson().toJson(map);
+        
+    }	
+
 }
