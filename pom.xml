@@ -36,7 +36,7 @@
     </plugins>
   </build>
   <dependencies>
-    <dependency>
+<dependency>
       <groupId>org.apache.openejb</groupId>
       <artifactId>javaee-api</artifactId>
       <version>5.0-1</version>
@@ -145,11 +145,6 @@
       <groupId>commons-io</groupId>
 	  <artifactId>commons-io</artifactId>
       <version>1.4</version>
-    </dependency>
-    <dependency>
-  		<groupId>com.dropbox.core</groupId>
-  		<artifactId>dropbox-core-sdk</artifactId>
-  		<version>[1.7,1.8)</version>
-	</dependency>
+    </dependency>  
   </dependencies>
 </project>

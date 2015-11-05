@@ -181,4 +181,12 @@ public class BeanInventory {
 	public String getImageDir(){
 		return image_dir;
 	}
+
+	public ArrayList<BeanInventoryMarketplace> getList() {
+		return list;
+	}
+
+	public void setList(ArrayList<BeanInventoryMarketplace> list) {
+		this.list = list;
+	}	
 }
