@@ -94,6 +94,7 @@ public  class Inventory  {
 					return new Gson().toJson(map_result);            	
             	}                               
 			}else{
+				map_result.put("image_dir_path","already_exist");
 				map_result.put("response_message", "failed");
 				map_result.put("response_code", "3005");
 				return new Gson().toJson(map_result); 
