@@ -36,6 +36,7 @@ import order.BeanOrder;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
@@ -54,6 +55,69 @@ public class InventoryOther {
 	public InventoryOther(){	
 		
 	}
+	
+	@POST
+	@Path("/upload_images") 
+	@Consumes(MediaType.MULTIPART_FORM_DATA)	
+	@Produces(MediaType.TEXT_PLAIN)	
+	public String testUpload(@Context HttpServletRequest request){		
+		Map<String,String> map_result = new HashMap<String,String>();
+		
+		UPLOAD_DIRECTORY = (context.getRealPath("/")).toString()+"/inventory_images/";		
+		boolean isMultipart = ServletFileUpload.isMultipartContent(request);	   
+		if (isMultipart) {
+			// Create a factory for disk-based file items
+            FileItemFactory factory = new DiskFileItemFactory();
+
+            // Create a new file upload handler
+            ServletFileUpload upload = new ServletFileUpload(factory);            
+            // Parse the request
+            List<FileItem> multiparts = null;
+            try {
+            	multiparts = upload.parseRequest(request);
+			} catch (FileUploadException e) {
+				map_result.put("response_message", "failed");
+				map_result.put("response_code", "3000");
+				return new Gson().toJson(map_result);
+			} 
+            	
+			//make folder name
+			String folder_name = multiparts.get(0).getName();                    
+			int index_number = folder_name.indexOf("-");
+			folder_name = folder_name.substring(0,index_number);
+            	
+			File finalDirectoryName = new File(UPLOAD_DIRECTORY+folder_name);
+            	
+			// if the directory does not exist, create it
+				                        
+			try{                        	
+				finalDirectoryName.mkdir();                            
+			} 
+			catch(SecurityException se){
+				map_result.put("response_message", "failed");
+				map_result.put("response_code", "3001");
+				return new Gson().toJson(map_result);            	
+			}                               
+			
+
+			for (FileItem item : multiparts) {	                    	
+				if (!item.isFormField()) {	                    					
+					String name = new File(item.getName()).getName();
+					try {
+						item.write(new File(finalDirectoryName + File.separator + name));
+					} catch (Exception e) {
+						map_result.put("response_message", "failed");							
+						map_result.put("response_code", "3002");
+						return new Gson().toJson(map_result);
+					}
+            	}
+            }		
+			map_result.put("image_dir_path","/inventory_images/"+folder_name+"/");
+		}		
+		map_result.put("response_message", "success");
+		map_result.put("response_code", "2000");     		
+		return new Gson().toJson(map_result);
+	}	
 	
 	@POST
 	@Path("/upload_file")
