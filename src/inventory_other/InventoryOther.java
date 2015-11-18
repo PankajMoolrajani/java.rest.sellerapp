@@ -570,7 +570,7 @@ public class InventoryOther {
 		
 		int id_inventory = 0;				
 		if (checkExistenceInventory(bean_inventory) == false){
-			
+			System.out.println("inventory existance false");
 			id_inventory = this.createInventory(bean_inventory);
 			
 			if (id_inventory != 0){
@@ -580,6 +580,7 @@ public class InventoryOther {
 				//Test Code Start
 					List<String> list1 =null;
 					boolean is_inventory_marketplace_created = this.createInventoryMarketplaces(bean_inventory, map);
+					System.out.println("is_inventory_marketplace_created "+is_inventory_marketplace_created);
 					if(is_inventory_marketplace_created){
 						
 						map.put("response_code", 2000);
@@ -621,6 +622,7 @@ public class InventoryOther {
         
     }	
 	public boolean createInventoryMarketplaces(BeanInventory bean_inventory, Map<String,Object> map){
+		System.out.println("came to inventory marketplace create fun ");
 		
 		List<BeanInventoryMarketplace> list =  bean_inventory.getList();
 		//System.out.println(mplace.getId_marketplace()+" "+mplace.getSell_price_inventory_marketplace()+" "+mplace.getStatus_inventory_marketplace()+" "+mplace.getUrl_inventory_marketplace()+" "+mplace.status_inventory_marketplace);
@@ -639,7 +641,9 @@ public class InventoryOther {
 				int id_inventory = (Integer)map.get("id_inventory");
 				int id_marketplace = mplace.getId_marketplace();
 				int id_price = this.createPrceInventoryMarketplace(mplace.getSell_price_inventory_marketplace(), bean_inventory.getPriceMrp());				
+				System.out.println("id_price "+id_price);
 				int id_stock = this.createStockInventoryMarketplace(mplace.getStock_inventory_marketplace(), bean_inventory);
+				System.out.println("id_stock "+id_stock);
 				String status = mplace.getStatus_inventory_marketplace();
 				String url = mplace.getUrl_inventory_marketplace();
 				
@@ -773,7 +777,7 @@ public class InventoryOther {
 			
 			String table_name = "stock";
 			String columns = "available, outgoing, incoming, aisle, rack, row, case_box";
-			String values = "?, ?, ?";
+			String values = "?, ?, ?, ?, ?, ?, ?";
 			String query = "INSERT INTO "+table_name+"("+columns+")"+" VALUES "+"("+values+")";
 			
 			Connection con = DbConnection.getConnection();
@@ -927,7 +931,7 @@ public class InventoryOther {
 		int price_mrp = bean_inventory.getPriceMrp();
 		
 		Map<String, Object> map_check_existence_price = new HashMap<String, Object>();
-		
+		System.out.println("in create price "+price_sell +" "+price_mrp);
 		map_check_existence_price = this.checkExistencePrice(price_sell, price_mrp);
 		
 		if ((Boolean) map_check_existence_price.get("boolean")){
