@@ -554,11 +554,57 @@ public class InventoryOther {
 			e.printStackTrace();
 			map.put("response_code", 4000);
 			map.put("response_message", "failure: get order - all");
+		}		
+		return new Gson().toJson(map);        
+    }	
+	
+	@POST
+	@Path("/marketplaces/get/id")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
+	
+	public String getInventoryMarketplaces(BeanInventoryMarketplace bean_inventrory_markeplace){
+		Map <String,Object> map = new HashMap<String,Object>();
+		int id_inventory = bean_inventrory_markeplace.getId_inventory();
+		List<BeanInventoryMarketplace> list_inventory_marketplaces = new ArrayList<BeanInventoryMarketplace>();
+		
+		String table_name = "inventory_marketplace i, marketplace m, price p, stock s";
+		String columns_name = "i.id id_inventory_marketplace, i.status_listing, i.url,m.id id_marketplace, p.price_sell, s.available";
+		String condition = "i.id_inventory=? AND i.id_marketplace=m.id AND i.id_price=p.id AND i.id_stock=s.id ;";
+		String query = "SELECT "+columns_name+" FROM "+table_name+" WHERE "+condition; 
+			
+		Connection con = DbConnection.getConnection();
+		
+		try{
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setInt(1, id_inventory);
+			
+			ResultSet rs_inventory_marketplaces = ps.executeQuery();
+			
+			while(rs_inventory_marketplaces.next()){				
+				BeanInventoryMarketplace bean_mplace = new BeanInventoryMarketplace();
+				bean_mplace.setId(rs_inventory_marketplaces.getInt("id_inventory_marketplace"));
+				bean_mplace.setStatus_inventory_marketplace(rs_inventory_marketplaces.getString("status_listing"));
+				bean_mplace.setUrl_inventory_marketplace(rs_inventory_marketplaces.getString("url"));
+				bean_mplace.setId_marketplace(rs_inventory_marketplaces.getInt("id_marketplace"));							
+				bean_mplace.setSell_price_inventory_marketplace(rs_inventory_marketplaces.getInt("price_sell"));
+				bean_mplace.setStock_inventory_marketplace(rs_inventory_marketplaces.getInt("available"));
+				list_inventory_marketplaces.add(bean_mplace);
+			}			
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			map.put("response_code", 4000);
+			map.put("response_message", "failure: get inventory marketplaces - id");
+			return new Gson().toJson(map);
 		}
+		map.put("data", list_inventory_marketplaces);
+		map.put("response_code", 2000);
+		map.put("response_message", "success: get inventory marketplaces - id");		
 		
 		return new Gson().toJson(map);
-        
-    }	
+	}
+	
 	@POST
 	@Path("/create")
 	@Consumes(MediaType.APPLICATION_JSON)
