@@ -559,7 +559,7 @@ public class InventoryOther {
     }	
 	
 	@POST
-	@Path("/marketplaces/get/id")
+	@Path("/inventory_marketplaces/get/id")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	
@@ -601,6 +601,46 @@ public class InventoryOther {
 		map.put("data", list_inventory_marketplaces);
 		map.put("response_code", 2000);
 		map.put("response_message", "success: get inventory marketplaces - id");		
+		
+		return new Gson().toJson(map);
+	}
+	
+	@GET
+	@Path("/marketplaces/get/all")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)	
+	public String getMarketplaces(){
+		Map <String,Object> map = new HashMap<String,Object>();		
+		List<BeanInventoryMarketplace> list_marketplaces = new ArrayList<BeanInventoryMarketplace>();
+		
+		String table_name = "marketplace";
+		String columns_name = "*";		
+		String query = "SELECT "+columns_name+" FROM "+table_name; 
+			
+		Connection con = DbConnection.getConnection();
+		
+		try{
+			PreparedStatement ps = con.prepareStatement(query);						
+			ResultSet rs_marketplaces = ps.executeQuery();
+			
+			while(rs_marketplaces.next()){				
+				BeanInventoryMarketplace bean_marketplace = new BeanInventoryMarketplace();
+				bean_marketplace.setId_marketplace(rs_marketplaces.getInt("id"));
+				bean_marketplace.setName(rs_marketplaces.getString("name"));
+				bean_marketplace.setType(rs_marketplaces.getString("type"));
+				bean_marketplace.setUrl_marketplace(rs_marketplaces.getString("url"));
+				list_marketplaces.add(bean_marketplace);
+			}			
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			map.put("response_code", 4000);
+			map.put("response_message", "failure: get marketplaces - all");
+			return new Gson().toJson(map);
+		}
+		map.put("data", list_marketplaces);
+		map.put("response_code", 2000);
+		map.put("response_message", "success: get marketplaces - all");		
 		
 		return new Gson().toJson(map);
 	}
